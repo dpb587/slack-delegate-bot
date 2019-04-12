@@ -1,0 +1,12 @@
+---
+applications:
+- name: slack-alias-bot
+  memory: 32M
+  instances: 1
+  buildpack: https://github.com/cloudfoundry/go-buildpack.git
+  env:
+    GOVERSION: go1.12
+    GOPACKAGENAME: github.com/dpb587/slack-alias-bot
+    SLACK_TOKEN: ((slack_token))
+  routes:
+  - route: slack-alias-bot.cfapps.io

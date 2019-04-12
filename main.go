@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"strconv"
 	"strings"
@@ -13,11 +14,13 @@ import (
 )
 
 func main() {
-	logger := log.New(os.Stdout, "slack-bot: ", log.Lshortfile|log.LstdFlags)
-	debug, err := strconv.ParseBool(os.Getenv("SLACK_DEBUG"))
-	if err != nil {
+	envDebug := os.Getenv("SLACK_DEBUG")
+	debug, err := strconv.ParseBool(envDebug)
+	if err != nil && envDebug != "" {
 		panic(fmt.Errorf("invalid: SLACK_DEBUG: %s", os.Getenv("SLACK_DEBUG")))
 	}
+
+	logger := log.New(os.Stdout, "slack-bot: ", log.Lshortfile|log.LstdFlags)
 	api := slack.New(os.Getenv("SLACK_TOKEN"), slack.OptionLog(logger), slack.OptionDebug(debug))
 
 	rtm := api.NewRTM()
@@ -47,6 +50,14 @@ func main() {
 			message.Literal("<!subteam^S309JAD1P|@openstack-cpi>"),
 		),
 	)
+
+	{ // cloudfoundry wants a healthcheck port
+		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			fmt.Fprintf(w, "Hello, you've requested: %s\n", r.URL.Path)
+		})
+
+		go http.ListenAndServe(":8080", nil)
+	}
 
 Loop:
 	for {

@@ -2,6 +2,28 @@
 
 
 [[projects]]
+  branch = "master"
+  digest = "1:226f155d82a49a4ede16d75f32ae4ef28493be444e37e151da6421d2292c8d6d"
+  name = "github.com/dpb587/go-pairist"
+  packages = [
+    "api",
+    "denormalized",
+  ]
+  pruneopts = "UT"
+  revision = "176555c511e261941cb4d4fdd1740c7c16d94f12"
+
+[[projects]]
+  branch = "master"
+  digest = "1:addd547e717d12c5392dbac70b8ca4a78f1080341735b7a571729acea2ffe59b"
+  name = "github.com/dpb587/go-slack-topic-bot"
+  packages = [
+    "message",
+    "message/pairist",
+  ]
+  pruneopts = "UT"
+  revision = "4717ac20372f080eb8b8b060528a4b8dcdbb1a35"
+
+[[projects]]
   digest = "1:7b5c6e2eeaa9ae5907c391a91c132abfd5c9e8a784a341b5625e750c67e6825d"
   name = "github.com/gorilla/websocket"
   packages = ["."]
@@ -31,6 +53,10 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  input-imports = ["github.com/nlopes/slack"]
+  input-imports = [
+    "github.com/dpb587/go-slack-topic-bot/message",
+    "github.com/dpb587/go-slack-topic-bot/message/pairist",
+    "github.com/nlopes/slack",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
