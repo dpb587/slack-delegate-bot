@@ -1,4 +1,4 @@
-package union
+package coalesce
 
 import (
 	"github.com/dpb587/slack-alias-bot/interrupt"

@@ -1,23 +1,29 @@
 # slack-alias-bot
 
-When mentioning `bosh-interrupt` the go-alias-bot starts a thread and mentions the interrupt pair.
+A bot for pulling others into a conversation.
 
 
 ## Usage
 
 ### End-User
 
-If the current channel has configured an interrupt, the bot can be mentioned directly:
+Mention the bot and it will start a thread with its configured delegates:
 
     [#bosh] @dberger: @interrupt what is the answer to life, the universe, and everything?
     [#bosh]  >> @interrupt: ^ @s4heid @langered
 
-To pull in the interrupt of another channel, suffix the mention with the channel:
+If configured, the delegates can be channel-specific:
 
-    [#bosh] @dberger: @interrupt #cf-deployment what is the point of 42?
-    [#bosh]  >> @interrupt: ^ @cdutra @tv
+    [#cf-deployment] @dberger: @interrupt what is the point of 42?
+    [#cf-deployment]  >> @interrupt: ^ @cdutra @tv
 
-To ask for an interrupt, direct message with the target:
+To pull in the interrupt of another channel, prefix the mention with the channel:
+
+    [#cf-deployment] @dberger: can you deploy Deep Thought?
+    [#cf-deployment]  >> @tv: #bosh @interrupt can help
+    [#cf-deployment]  >> @interrupt: ^ @s4heid @langered
+
+For private interrupt lookup, direct message (with the channel, if relevant):
 
     [@interrupt] @dberger: #bosh
     [@interrupt] @interrupt: @s4heid @langered
@@ -63,19 +69,8 @@ interrupt:
 Run the bot...
 
 ```
-$ slack-alias-bot run config/
+$ go run ./main --handler=example/yaml/* run
 ```
-
-Validate configuration...
-
-```
-$ slack-alias-bot validate config/
-```
-
-Environment:
-
- * **`SLACK_TOKEN`** -- API token
- * `SLACK_DEBUG` -- optionally enable extra debug logging by setting to `true`
 
 
 ## License
