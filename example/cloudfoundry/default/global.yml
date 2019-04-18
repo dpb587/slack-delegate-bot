@@ -1,0 +1,5 @@
+---
+priority: -1000
+then:
+- coalesce:
+  - topiclookup: ~

@@ -10,9 +10,11 @@ import (
 	conditionalfactory "github.com/dpb587/slack-delegate-bot/interrupt/interrupts/conditional/factory"
 	literalfactory "github.com/dpb587/slack-delegate-bot/interrupt/interrupts/literal/factory"
 	pairistfactory "github.com/dpb587/slack-delegate-bot/interrupt/interrupts/pairist/factory"
+	topiclookupfactory "github.com/dpb587/slack-delegate-bot/interrupt/interrupts/topiclookup/factory"
 	unionfactory "github.com/dpb587/slack-delegate-bot/interrupt/interrupts/union/factory"
 	userfactory "github.com/dpb587/slack-delegate-bot/interrupt/interrupts/user/factory"
 	usergroupfactory "github.com/dpb587/slack-delegate-bot/interrupt/interrupts/usergroup/factory"
+	"github.com/nlopes/slack"
 )
 
 type factory struct {
@@ -21,7 +23,7 @@ type factory struct {
 
 var _ interrupts.Factory = &factory{}
 
-func New(conditionsFactory conditions.Factory) interrupts.Factory {
+func New(conditionsFactory conditions.Factory, slackAPI *slack.Client) interrupts.Factory {
 	f := &factory{
 		factory: map[string]interrupts.Factory{},
 	}
@@ -30,6 +32,7 @@ func New(conditionsFactory conditions.Factory) interrupts.Factory {
 	f.factory["if"] = conditionalfactory.New(f, conditionsFactory)
 	f.factory["literal"] = literalfactory.New()
 	f.factory["pairist"] = pairistfactory.New()
+	f.factory["topiclookup"] = topiclookupfactory.New(slackAPI)
 	f.factory["union"] = unionfactory.New(f)
 	f.factory["user"] = userfactory.New()
 	f.factory["usergroup"] = usergroupfactory.New()

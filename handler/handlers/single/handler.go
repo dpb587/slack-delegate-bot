@@ -1,12 +1,9 @@
 package single
 
 import (
-	"fmt"
-
 	"github.com/dpb587/slack-delegate-bot/condition"
 	"github.com/dpb587/slack-delegate-bot/handler"
 	"github.com/dpb587/slack-delegate-bot/interrupt"
-	"github.com/dpb587/slack-delegate-bot/interrupt/interrupts"
 	"github.com/dpb587/slack-delegate-bot/message"
 )
 
@@ -26,21 +23,19 @@ func (h Handler) IsApplicable(m message.Message) (bool, error) {
 	return true, nil
 }
 
-func (h Handler) Apply(m *message.Message) error {
-	lookups, err := h.Interrupt.Lookup(*m)
+func (h Handler) Execute(m *message.Message) (handler.MessageResponse, error) {
+	response := handler.MessageResponse{}
+
+	interrupts, err := h.Interrupt.Lookup(*m)
 	if err != nil {
-		return err
+		return response, err
 	}
 
-	if len(lookups) == 0 {
-		if h.Options.EmptyResponse != "" {
-			m.SetResponse(message.Response{Text: h.Options.EmptyResponse})
-		}
-
-		return nil
+	if len(interrupts) == 0 {
+		response.EmptyMessage = h.Options.EmptyMessage
+	} else {
+		response.Interrupts = interrupts
 	}
 
-	m.SetResponse(message.Response{Text: fmt.Sprintf("^ %s", interrupts.Join(lookups, " "))})
-
-	return nil
+	return response, nil
 }

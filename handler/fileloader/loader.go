@@ -3,6 +3,7 @@ package fileloader
 import (
 	"io/ioutil"
 	"path/filepath"
+	"sort"
 
 	"github.com/dpb587/slack-delegate-bot/condition/conditions"
 	"github.com/dpb587/slack-delegate-bot/handler"
@@ -32,8 +33,7 @@ type Options struct {
 }
 
 type WithOptions struct {
-	EmptyResponse    string `yaml:"empty_response"`
-	ResponseTemplate string `yaml:"response_template"`
+	EmptyMessage string `yaml:"empty_message"`
 }
 
 func (l Loader) Load(paths []string) (handler.Handler, error) {
@@ -88,8 +88,7 @@ func (l Loader) loadPath(path string) (handler.Handler, error) {
 	h.Interrupt = then
 
 	h.Options = handler.Options{
-		EmptyResponse:    parsed.With.EmptyResponse,
-		ResponseTemplate: parsed.With.ResponseTemplate,
+		EmptyMessage: parsed.With.EmptyMessage,
 	}
 
 	return h, nil
@@ -103,6 +102,8 @@ func (l Loader) squashPaths(paths []string) ([]string, error) {
 		if err != nil {
 			return nil, errors.Wrapf(err, "globbing %s", path)
 		}
+
+		sort.Strings(globbed)
 
 		squashed = append(squashed, globbed...)
 	}

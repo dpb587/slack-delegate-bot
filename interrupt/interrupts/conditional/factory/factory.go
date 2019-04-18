@@ -17,7 +17,7 @@ type factory struct {
 }
 
 type Options struct {
-	When interface{}                 `yaml:"when"`
+	When []interface{}               `yaml:"when"`
 	Then map[interface{}]interface{} `yaml:"then"`
 	Else map[interface{}]interface{} `yaml:"else"`
 }
@@ -58,8 +58,8 @@ func (f factory) Create(name string, options interface{}) (interrupt.Interrupt, 
 
 	var else_ interrupt.Interrupt
 
-	if parsed.Then != nil {
-		elseName, elseOptions, err := config.KeyValueTuple(parsed.Then)
+	if parsed.Else != nil {
+		elseName, elseOptions, err := config.KeyValueTuple(parsed.Else)
 		if err != nil {
 			return nil, errors.Wrap(err, "parsing conditional else")
 		}

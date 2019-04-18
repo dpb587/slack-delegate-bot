@@ -8,13 +8,13 @@ import (
 	"time"
 
 	"github.com/dpb587/slack-delegate-bot/handler"
+	"github.com/dpb587/slack-delegate-bot/interrupt/interrupts"
 	"github.com/dpb587/slack-delegate-bot/message"
 	"github.com/nlopes/slack"
 	"github.com/sirupsen/logrus"
 )
 
 type Service struct {
-	token   string
 	handler handler.Handler
 	logger  logrus.FieldLogger
 
@@ -22,24 +22,16 @@ type Service struct {
 	self *slack.UserDetails
 }
 
-func New(token string, handler_ handler.Handler, logger logrus.FieldLogger) *Service {
+func New(api *slack.Client, handler_ handler.Handler, logger logrus.FieldLogger) *Service {
 	return &Service{
-		token:   token,
+		api:     api,
 		handler: handler_,
 		logger:  logger,
 	}
 }
 
-func (s *Service) API() *slack.Client {
-	if s.api == nil {
-		s.api = slack.New(s.token) // , slack.OptionDebug(true)) // TODO , slack.OptionLog(s.logger))
-	}
-
-	return s.api
-}
-
 func (s *Service) Run() error {
-	rtm := s.API().NewRTM()
+	rtm := s.api.NewRTM()
 	go rtm.ManageConnection()
 
 	for {
@@ -60,24 +52,34 @@ func (s *Service) Run() error {
 
 					s.logger.Debugf("received message: %#+v", intmsg)
 
-					err := s.handler.Apply(&intmsg)
+					response, err := s.handler.Execute(&intmsg)
 					if err != nil {
 						s.logger.Errorf("failed to apply handler: %v", err)
 
 						continue
 					}
 
-					response := intmsg.GetResponse()
-					if response == nil {
-						s.logger.Debugf("no response found")
+					var msg string
+
+					if len(response.Interrupts) > 0 {
+						msg = interrupts.Join(response.Interrupts, " ")
+
+						if intmsg.OriginType == message.ChannelOriginType {
+							msg = fmt.Sprintf("^ %s", msg)
+						}
+					} else if response.EmptyMessage != "" {
+						msg = response.EmptyMessage
+					}
+
+					if msg == "" {
+						s.logger.Debugf("no response")
 
 						continue
 					}
 
-					outgoing := rtm.NewOutgoingMessage(response.Text, ev.Msg.Channel)
+					outgoing := rtm.NewOutgoingMessage(msg, ev.Msg.Channel)
 
 					if intmsg.OriginType == message.ChannelOriginType {
-						outgoing.Text = strings.TrimPrefix(outgoing.Text, "^ ") // TODO hacky
 						outgoing.ThreadTimestamp = ev.Msg.Timestamp
 					}
 

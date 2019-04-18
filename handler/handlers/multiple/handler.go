@@ -24,21 +24,34 @@ func (h Handler) IsApplicable(m message.Message) (bool, error) {
 	return false, nil
 }
 
-func (h Handler) Apply(m *message.Message) error {
-	// last one wins
+func (h Handler) Execute(m *message.Message) (handler.MessageResponse, error) {
+	response := handler.MessageResponse{}
+
+	// first one finding interrupt wins
 	for _, hh := range h.Handlers {
 		b, err := hh.IsApplicable(*m)
 		if err != nil {
-			return err
+			return handler.MessageResponse{}, err
 		} else if !b {
 			continue
 		}
 
-		err = hh.Apply(m)
+		r, err := hh.Execute(m)
 		if err != nil {
-			return err
+			return handler.MessageResponse{}, err
+		}
+
+		if len(r.Interrupts) > 0 {
+			response.Interrupts = r.Interrupts
+
+			// if interrupts are found, return immediately
+			return response, nil
+		}
+
+		if r.EmptyMessage != "" {
+			response.EmptyMessage = r.EmptyMessage
 		}
 	}
 
-	return nil
+	return response, nil
 }

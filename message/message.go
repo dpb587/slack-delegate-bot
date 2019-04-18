@@ -1,6 +1,8 @@
 package message
 
-import "time"
+import (
+	"time"
+)
 
 type OriginType string
 
@@ -13,18 +15,4 @@ type Message struct {
 	InterruptTarget string
 	Timestamp       time.Time
 	Text            string
-
-	response *Response
-}
-
-func (m *Message) SetResponse(response Response) {
-	m.response = &response
-}
-
-func (m *Message) GetResponse() *Response {
-	return m.response
-}
-
-type Response struct {
-	Text string
 }
