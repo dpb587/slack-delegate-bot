@@ -10,10 +10,17 @@ type RunCmd struct {
 }
 
 func (c *RunCmd) Execute(_ []string) error {
-	svc, err := c.Root.GetSlackService()
+	slackSvc, err := c.Root.GetSlackService()
 	if err != nil {
 		return errors.Wrap(err, "loading slack service")
 	}
 
-	return svc.Run()
+	httpSvc, err := c.Root.GetHTTPService()
+	if err != nil {
+		return errors.Wrap(err, "loading http service")
+	}
+
+	go httpSvc.Run()
+
+	return slackSvc.Run()
 }

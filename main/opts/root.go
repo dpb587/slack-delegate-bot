@@ -8,6 +8,7 @@ import (
 	"github.com/dpb587/slack-delegate-bot/handler/fileloader"
 	interruptsfactory "github.com/dpb587/slack-delegate-bot/interrupt/interrupts/defaultfactory"
 	"github.com/dpb587/slack-delegate-bot/main/args"
+	"github.com/dpb587/slack-delegate-bot/service/http"
 	"github.com/dpb587/slack-delegate-bot/service/slack"
 	slackapi "github.com/nlopes/slack"
 	"github.com/pkg/errors"
@@ -18,6 +19,8 @@ type Root struct {
 	SlackToken   string `long:"slack-token" description:"Slack API Token" env:"SLACK_TOKEN"`
 	slackAPI     *slackapi.Client
 	slackService *slack.Service
+
+	httpService *http.Service
 
 	Handlers []string `long:"handler" description:"Path to handler configuration"`
 	handler  handler.Handler
@@ -75,4 +78,12 @@ func (r *Root) GetSlackService() (*slack.Service, error) {
 	}
 
 	return r.slackService, nil
+}
+
+func (r *Root) GetHTTPService() (*http.Service, error) {
+	if r.httpService == nil {
+		r.httpService = http.New(r.GetLogger().WithField("service", "http"))
+	}
+
+	return r.httpService, nil
 }

@@ -2,6 +2,13 @@
 
 A bot for pulling others into a conversation.
 
+    status: alpha
+    todo: test coverage
+    todo: bot inviting interrupt mentions if they're not already in the channel
+    todo: cf deployment automation
+    todo: DM parsing channel names instead of IDs
+    todo: better logging
+
 
 ## Usage
 
