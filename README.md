@@ -1,4 +1,4 @@
-# slack-alias-bot
+# slack-delegate-bot
 
 A bot for pulling others into a conversation.
 

@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/dpb587/slack-alias-bot/main/opts"
+	"github.com/dpb587/slack-delegate-bot/main/opts"
 )
 
 type ValidateCmd struct {

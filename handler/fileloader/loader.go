@@ -4,11 +4,11 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
-	"github.com/dpb587/slack-alias-bot/conditions"
-	"github.com/dpb587/slack-alias-bot/handler"
-	"github.com/dpb587/slack-alias-bot/handlers/multiple"
-	"github.com/dpb587/slack-alias-bot/handlers/single"
-	"github.com/dpb587/slack-alias-bot/interrupts"
+	"github.com/dpb587/slack-delegate-bot/condition/conditions"
+	"github.com/dpb587/slack-delegate-bot/handler"
+	"github.com/dpb587/slack-delegate-bot/handler/handlers/multiple"
+	"github.com/dpb587/slack-delegate-bot/handler/handlers/single"
+	"github.com/dpb587/slack-delegate-bot/interrupt/interrupts"
 	"github.com/pkg/errors"
 	yaml "gopkg.in/yaml.v2"
 )

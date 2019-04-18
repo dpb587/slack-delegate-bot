@@ -3,12 +3,12 @@ package opts
 import (
 	"os"
 
-	conditionsfactory "github.com/dpb587/slack-alias-bot/conditions/defaultfactory"
-	"github.com/dpb587/slack-alias-bot/handler"
-	"github.com/dpb587/slack-alias-bot/handler/fileloader"
-	interruptsfactory "github.com/dpb587/slack-alias-bot/interrupts/defaultfactory"
-	"github.com/dpb587/slack-alias-bot/main/args"
-	"github.com/dpb587/slack-alias-bot/service/slack"
+	conditionsfactory "github.com/dpb587/slack-delegate-bot/condition/conditions/defaultfactory"
+	"github.com/dpb587/slack-delegate-bot/handler"
+	"github.com/dpb587/slack-delegate-bot/handler/fileloader"
+	interruptsfactory "github.com/dpb587/slack-delegate-bot/interrupt/interrupts/defaultfactory"
+	"github.com/dpb587/slack-delegate-bot/main/args"
+	"github.com/dpb587/slack-delegate-bot/service/slack"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
