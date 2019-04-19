@@ -133,6 +133,18 @@ literal: { text: "find the person with the *ninja* hat" }
 ```
 
 
+##### `literalmap`
+
+Convert literal interrupts generated from another interrupt source into Slack users or usergroups.
+
+```yaml
+literalmap:
+  from: { pairist: { team: bosh-director, role: Interrupt } }
+  users:
+    Danny: U0FUK0EBH
+```
+
+
 ##### `pairist`
 
 Refer to a team's [pairist](https://pair.ist/) to find people with a particular role.
@@ -141,8 +153,6 @@ Refer to a team's [pairist](https://pair.ist/) to find people with a particular 
 pairist:
   team: bosh-director
   role: Interrupt
-  people:
-    Charles: U03RC8WQ6
 ```
 
 

@@ -13,9 +13,8 @@ import (
 type factory struct{}
 
 type Options struct {
-	Team   string            `yaml:"team"`
-	Role   string            `yaml:"role"`
-	People map[string]string `yaml:"people"`
+	Team string `yaml:"team"`
+	Role string `yaml:"role"`
 }
 
 func New() interrupts.Factory {
@@ -35,8 +34,7 @@ func (f factory) Create(name string, options interface{}) (interrupt.Interrupt, 
 	}
 
 	return &pairist.Interrupt{
-		Team:   parsed.Team,
-		Role:   parsed.Role,
-		People: parsed.People,
+		Team: parsed.Team,
+		Role: parsed.Role,
 	}, nil
 }

@@ -8,9 +8,8 @@ import (
 )
 
 type Interrupt struct {
-	Team   string
-	Role   string
-	People map[string]string
+	Team string
+	Role string
 }
 
 var _ interrupt.Interrupt = &Interrupt{}
@@ -25,11 +24,7 @@ func (i Interrupt) Lookup(_ message.Message) ([]interrupt.Interruptible, error) 
 
 	for _, lane := range denormalized.BuildLanes(curr).ByRole(i.Role) {
 		for _, person := range lane.People {
-			if handle, ok := i.People[person.Name]; ok {
-				res = append(res, interrupt.User{ID: handle})
-			} else {
-				res = append(res, interrupt.Literal{Text: person.Name})
-			}
+			res = append(res, interrupt.Literal{Text: person.Name})
 		}
 	}
 

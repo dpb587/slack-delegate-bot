@@ -1,33 +1,39 @@
 ---
 when:
 - target: { channel: C02HPPYQ2 }
-then:
-- if:
-    when:
-    - hours: { tz: America/Los_Angeles, start: 09:00, end: 18:00 }
-    - day: { tz: America/Los_Angeles, days: [ Mon, Tue, Wed, Thu, Fri ] }
-    - not:
-        and:
-        - date: { tz: America/Toronto, dates: [ 2019-01-01, 2019-02-18, 2019-04-19, 2019-05-20, 2019-07-01, 2019-08-05, 2019-09-02, 2019-10-14, 2019-12-25, 2019-12-26 ] }
-        - date: { tz: America/Los_Angeles, dates: [ 2019-01-01, 2019-01-21, 2019-02-18, 2019-05-27, 2019-07-04, 2019-09-02, 2019-11-28, 2019-11-29, 2019-12-25 ] }
-    then:
-      pairist:
-        team: bosh-director
-        role: interrupt
-        people:
-          Charles: U03RC8WQ6
-          Rebecca: U8YCN97Q9
-          Belinda: U5EJ8MQUW
-          Miguel: UD46WTA4Q
-          Morgan: U04V9L81Y
-          Maya: U03DX27U9
-          Jim: U02QZ1E3G
-- if:
-    when:
-    - hours: { tz: Europe/Berlin, start: 09:00, end: 18:00 }
-    - day: { tz: Europe/Berlin, days: [ Mon, Tue, Wed, Thu, Fri ] }
-    - not: { date: { tz: Europe/Berlin, dates: [ 2019-01-01, 2019-01-06, 2019-04-19, 2019-04-22, 2019-05-01, 2019-05-30, 2019-06-10, 2019-06-20, 2019-10-03, 2019-10-31, 2019-11-01, 2019-12-25, 2019-12-26 ] } }
-    then:
-      usergroup: { id: S309JAD1P }
+then: # TODO single child
+  union:
+  - if:
+      when:
+      - or:
+        - and:
+          - hours: { tz: America/Los_Angeles, start: 09:00, end: 18:00 }
+          - day: { tz: America/Los_Angeles, days: [ Mon, Tue, Wed, Thu, Fri ] }
+          - not: { date: { tz: America/Los_Angeles, dates: [ 2019-01-01, 2019-01-21, 2019-02-18, 2019-05-27, 2019-07-04, 2019-09-02, 2019-11-28, 2019-11-29, 2019-12-25 ] } }
+        - and:
+          - hours: { tz: America/Toronto, start: 09:00, end: 18:00 }
+          - day: { tz: America/Toronto, days: [ Mon, Tue, Wed, Thu, Fri ] }
+          - not: { date: { tz: America/Toronto, dates: [ 2019-01-01, 2019-02-18, 2019-04-19, 2019-05-20, 2019-07-01, 2019-08-05, 2019-09-02, 2019-10-14, 2019-12-25, 2019-12-26 ] } }
+      then:
+        literalmap:
+          from:
+            pairist:
+              team: bosh-director
+              role: interrupt
+          users:
+            Charles: U03RC8WQ6
+            Rebecca: U8YCN97Q9
+            Belinda: U5EJ8MQUW
+            Miguel: UD46WTA4Q
+            Morgan: U04V9L81Y
+            Maya: U03DX27U9
+            Jim: U02QZ1E3G
+  - if:
+      when:
+      - hours: { tz: Europe/Berlin, start: 09:00, end: 18:00 }
+      - day: { tz: Europe/Berlin, days: [ Mon, Tue, Wed, Thu, Fri ] }
+      - not: { date: { tz: Europe/Berlin, dates: [ 2019-01-01, 2019-01-06, 2019-04-19, 2019-04-22, 2019-05-01, 2019-05-30, 2019-06-10, 2019-06-20, 2019-10-03, 2019-10-31, 2019-11-01, 2019-12-25, 2019-12-26 ] } }
+      then:
+        usergroup: { id: S309JAD1P }
 with:
   empty_message: Sorry, no interrupt is available right now. The community may be able to help, or feel free to ping again later.
