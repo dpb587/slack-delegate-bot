@@ -27,13 +27,17 @@ func New(interruptsFactory interrupts.Factory, conditionsFactory conditions.Fact
 	}
 }
 
-type Options struct {
-	When []interface{} `yaml:"when"`
-	Then interface{}   `yaml:"then"`
-	With WithOptions   `yaml:"with"`
+type ConfigFile struct {
+	DelegateBot ConfigFileDelegateBot `yaml:"delegatebot"`
 }
 
-type WithOptions struct {
+type ConfigFileDelegateBot struct {
+	Watch    []interface{}                    `yaml:"watch"`
+	Delegate interface{}                      `yaml:"delegate"`
+	Options  ConfigFileDelegateBotWithOptions `yaml:"options"`
+}
+
+type ConfigFileDelegateBotWithOptions struct {
 	EmptyMessage string `yaml:"empty_message"`
 }
 
@@ -65,36 +69,36 @@ func (l Loader) loadPath(path string) (handler.Handler, error) {
 		return nil, errors.Wrap(err, "reading")
 	}
 
-	var parsed Options
+	var parsed ConfigFile
 
 	err = yaml.Unmarshal(pathBytes, &parsed)
 	if err != nil {
 		return nil, errors.Wrap(err, "unmarshalling")
 	}
 
-	if parsed.When != nil {
-		when, err := l.conditionsFactory.Create("and", parsed.When)
+	if parsed.DelegateBot.Watch != nil {
+		watch, err := l.conditionsFactory.Create("or", parsed.DelegateBot.Watch)
 		if err != nil {
-			return nil, errors.Wrap(err, "building when")
+			return nil, errors.Wrap(err, "building watch")
 		}
 
-		h.Condition = when
+		h.Condition = watch
 	}
 
-	thenKey, thenOptions, err := config.KeyValueTuple(parsed.Then)
+	delegateKey, delegateOptions, err := config.KeyValueTuple(parsed.DelegateBot.Delegate)
 	if err != nil {
-		return nil, errors.Wrap(err, "parsing then")
+		return nil, errors.Wrap(err, "parsing delegate")
 	}
 
-	then, err := l.interruptsFactory.Create(thenKey, thenOptions)
+	delegate, err := l.interruptsFactory.Create(delegateKey, delegateOptions)
 	if err != nil {
-		return nil, errors.Wrap(err, "building then")
+		return nil, errors.Wrap(err, "building delegate")
 	}
 
-	h.Interrupt = then
+	h.Interrupt = delegate // TODO Interrupt -> Delegate
 
 	h.Options = handler.Options{
-		EmptyMessage: parsed.With.EmptyMessage,
+		EmptyMessage: parsed.DelegateBot.Options.EmptyMessage,
 	}
 
 	return h, nil
