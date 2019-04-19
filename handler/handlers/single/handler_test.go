@@ -3,11 +3,11 @@ package single_test
 import (
 	"errors"
 
-	"github.com/dpb587/slack-delegate-bot/condition/conditionfakes"
+	"github.com/dpb587/slack-delegate-bot/logic/condition/conditionfakes"
 	"github.com/dpb587/slack-delegate-bot/handler"
 	. "github.com/dpb587/slack-delegate-bot/handler/handlers/single"
-	"github.com/dpb587/slack-delegate-bot/interrupt"
-	"github.com/dpb587/slack-delegate-bot/interrupt/interruptfakes"
+	"github.com/dpb587/slack-delegate-bot/logic/interrupt"
+	"github.com/dpb587/slack-delegate-bot/logic/interrupt/interruptfakes"
 	"github.com/dpb587/slack-delegate-bot/message"
 
 	. "github.com/onsi/ginkgo"

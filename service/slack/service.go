@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/dpb587/slack-delegate-bot/handler"
-	"github.com/dpb587/slack-delegate-bot/interrupt/interrupts"
+	"github.com/dpb587/slack-delegate-bot/logic/interrupt/interrupts"
 	"github.com/dpb587/slack-delegate-bot/message"
 	"github.com/nlopes/slack"
 	"github.com/sirupsen/logrus"

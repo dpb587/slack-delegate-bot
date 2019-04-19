@@ -1,9 +1,9 @@
 package single
 
 import (
-	"github.com/dpb587/slack-delegate-bot/condition"
+	"github.com/dpb587/slack-delegate-bot/logic/condition"
 	"github.com/dpb587/slack-delegate-bot/handler"
-	"github.com/dpb587/slack-delegate-bot/interrupt"
+	"github.com/dpb587/slack-delegate-bot/logic/interrupt"
 	"github.com/dpb587/slack-delegate-bot/message"
 )
 

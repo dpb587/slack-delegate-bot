@@ -5,12 +5,12 @@ import (
 	"path/filepath"
 	"sort"
 
-	"github.com/dpb587/slack-delegate-bot/condition/conditions"
+	"github.com/dpb587/slack-delegate-bot/logic/condition/conditions"
 	"github.com/dpb587/slack-delegate-bot/config"
 	"github.com/dpb587/slack-delegate-bot/handler"
 	"github.com/dpb587/slack-delegate-bot/handler/handlers/multiple"
 	"github.com/dpb587/slack-delegate-bot/handler/handlers/single"
-	"github.com/dpb587/slack-delegate-bot/interrupt/interrupts"
+	"github.com/dpb587/slack-delegate-bot/logic/interrupt/interrupts"
 	"github.com/pkg/errors"
 	yaml "gopkg.in/yaml.v2"
 )
