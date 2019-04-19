@@ -6,7 +6,7 @@ import (
 	conditionsfactory "github.com/dpb587/slack-delegate-bot/logic/condition/conditions/defaultfactory"
 	"github.com/dpb587/slack-delegate-bot/handler"
 	"github.com/dpb587/slack-delegate-bot/handler/fileloader"
-	interruptsfactory "github.com/dpb587/slack-delegate-bot/logic/interrupt/interrupts/defaultfactory"
+	interruptsfactory "github.com/dpb587/slack-delegate-bot/logic/delegate/delegates/defaultfactory"
 	"github.com/dpb587/slack-delegate-bot/main/args"
 	"github.com/dpb587/slack-delegate-bot/service/http"
 	"github.com/dpb587/slack-delegate-bot/service/slack"

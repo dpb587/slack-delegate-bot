@@ -5,24 +5,24 @@ import (
 	"path/filepath"
 	"sort"
 
-	"github.com/dpb587/slack-delegate-bot/logic/condition/conditions"
 	"github.com/dpb587/slack-delegate-bot/config"
 	"github.com/dpb587/slack-delegate-bot/handler"
 	"github.com/dpb587/slack-delegate-bot/handler/handlers/multiple"
 	"github.com/dpb587/slack-delegate-bot/handler/handlers/single"
-	"github.com/dpb587/slack-delegate-bot/logic/interrupt/interrupts"
+	"github.com/dpb587/slack-delegate-bot/logic/condition/conditions"
+	"github.com/dpb587/slack-delegate-bot/logic/delegate/delegates"
 	"github.com/pkg/errors"
 	yaml "gopkg.in/yaml.v2"
 )
 
 type Loader struct {
-	interruptsFactory interrupts.Factory
+	delegatorsFactory delegates.Factory
 	conditionsFactory conditions.Factory
 }
 
-func New(interruptsFactory interrupts.Factory, conditionsFactory conditions.Factory) *Loader {
+func New(delegatorsFactory delegates.Factory, conditionsFactory conditions.Factory) *Loader {
 	return &Loader{
-		interruptsFactory: interruptsFactory,
+		delegatorsFactory: delegatorsFactory,
 		conditionsFactory: conditionsFactory,
 	}
 }
@@ -90,12 +90,12 @@ func (l Loader) loadPath(path string) (handler.Handler, error) {
 		return nil, errors.Wrap(err, "parsing delegate")
 	}
 
-	delegate, err := l.interruptsFactory.Create(delegateKey, delegateOptions)
+	delegate, err := l.delegatorsFactory.Create(delegateKey, delegateOptions)
 	if err != nil {
 		return nil, errors.Wrap(err, "building delegate")
 	}
 
-	h.Interrupt = delegate // TODO Interrupt -> Delegate
+	h.Delegator = delegate
 
 	h.Options = handler.Options{
 		EmptyMessage: parsed.DelegateBot.Options.EmptyMessage,

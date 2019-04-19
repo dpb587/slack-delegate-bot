@@ -3,11 +3,11 @@ package single_test
 import (
 	"errors"
 
-	"github.com/dpb587/slack-delegate-bot/logic/condition/conditionfakes"
 	"github.com/dpb587/slack-delegate-bot/handler"
 	. "github.com/dpb587/slack-delegate-bot/handler/handlers/single"
-	"github.com/dpb587/slack-delegate-bot/logic/interrupt"
-	"github.com/dpb587/slack-delegate-bot/logic/interrupt/interruptfakes"
+	"github.com/dpb587/slack-delegate-bot/logic/condition/conditionfakes"
+	"github.com/dpb587/slack-delegate-bot/logic/delegate"
+	"github.com/dpb587/slack-delegate-bot/logic/delegate/delegatefakes"
 	"github.com/dpb587/slack-delegate-bot/message"
 
 	. "github.com/onsi/ginkgo"
@@ -17,12 +17,12 @@ import (
 var _ = Describe("Handler", func() {
 	var subject Handler
 	var msg message.Message
-	var int *interruptfakes.FakeInterrupt
+	var del *delegatefakes.FakeDelegator
 
 	BeforeEach(func() {
-		int = &interruptfakes.FakeInterrupt{}
+		del = &delegatefakes.FakeDelegator{}
 		subject = Handler{
-			Interrupt: int,
+			Delegator: del,
 			Options: handler.Options{
 				EmptyMessage: "fake-empty-message",
 			},
@@ -71,9 +71,9 @@ var _ = Describe("Handler", func() {
 	})
 
 	Describe("Execute", func() {
-		Context("interrupt errors", func() {
+		Context("delegate errors", func() {
 			BeforeEach(func() {
-				int.LookupReturns(nil, errors.New("fake-err1"))
+				del.DelegateReturns(nil, errors.New("fake-err1"))
 			})
 
 			It("errors", func() {
@@ -83,22 +83,22 @@ var _ = Describe("Handler", func() {
 			})
 		})
 
-		Context("with interrupts", func() {
+		Context("with delegates", func() {
 			BeforeEach(func() {
-				int.LookupReturns([]interrupt.Interruptible{interrupt.Literal{Text: "something"}}, nil)
+				del.DelegateReturns([]delegate.Delegate{delegate.Literal{Text: "something"}}, nil)
 			})
 
-			It("provides interrupts", func() {
+			It("provides delegates", func() {
 				res, err := subject.Execute(&msg)
 				Expect(err).NotTo(HaveOccurred())
-				Expect(res.Interrupts).To(ConsistOf(interrupt.Literal{Text: "something"}))
+				Expect(res.Delegates).To(ConsistOf(delegate.Literal{Text: "something"}))
 			})
 		})
 
 		It("configures empty message", func() {
 			res, err := subject.Execute(&msg)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(res.Interrupts).To(HaveLen(0))
+			Expect(res.Delegates).To(HaveLen(0))
 			Expect(res.EmptyMessage).To(Equal("fake-empty-message"))
 		})
 	})

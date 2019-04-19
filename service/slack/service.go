@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/dpb587/slack-delegate-bot/handler"
-	"github.com/dpb587/slack-delegate-bot/logic/interrupt/interrupts"
+	"github.com/dpb587/slack-delegate-bot/logic/delegate/delegates"
 	"github.com/dpb587/slack-delegate-bot/message"
 	"github.com/nlopes/slack"
 	"github.com/sirupsen/logrus"
@@ -61,8 +61,8 @@ func (s *Service) Run() error {
 
 					var msg string
 
-					if len(response.Interrupts) > 0 {
-						msg = interrupts.Join(response.Interrupts, " ")
+					if len(response.Delegates) > 0 {
+						msg = delegates.Join(response.Delegates, " ")
 
 						if intmsg.OriginType == message.ChannelOriginType {
 							msg = fmt.Sprintf("^ %s", msg)

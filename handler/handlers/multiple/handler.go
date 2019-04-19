@@ -41,8 +41,8 @@ func (h Handler) Execute(m *message.Message) (handler.MessageResponse, error) {
 			return handler.MessageResponse{}, err
 		}
 
-		if len(r.Interrupts) > 0 {
-			response.Interrupts = r.Interrupts
+		if len(r.Delegates) > 0 {
+			response.Delegates = r.Delegates
 
 			// if interrupts are found, return immediately
 			return response, nil

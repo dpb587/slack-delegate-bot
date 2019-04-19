@@ -1,15 +1,15 @@
 package single
 
 import (
-	"github.com/dpb587/slack-delegate-bot/logic/condition"
 	"github.com/dpb587/slack-delegate-bot/handler"
-	"github.com/dpb587/slack-delegate-bot/logic/interrupt"
+	"github.com/dpb587/slack-delegate-bot/logic/condition"
+	"github.com/dpb587/slack-delegate-bot/logic/delegate"
 	"github.com/dpb587/slack-delegate-bot/message"
 )
 
 type Handler struct {
 	Condition condition.Condition
-	Interrupt interrupt.Interrupt
+	Delegator delegate.Delegator
 	Options   handler.Options
 }
 
@@ -26,7 +26,7 @@ func (h Handler) IsApplicable(m message.Message) (bool, error) {
 func (h Handler) Execute(m *message.Message) (handler.MessageResponse, error) {
 	response := handler.MessageResponse{}
 
-	interrupts, err := h.Interrupt.Lookup(*m)
+	interrupts, err := h.Delegator.Delegate(*m)
 	if err != nil {
 		return response, err
 	}
@@ -34,7 +34,7 @@ func (h Handler) Execute(m *message.Message) (handler.MessageResponse, error) {
 	if len(interrupts) == 0 {
 		response.EmptyMessage = h.Options.EmptyMessage
 	} else {
-		response.Interrupts = interrupts
+		response.Delegates = interrupts
 	}
 
 	return response, nil
