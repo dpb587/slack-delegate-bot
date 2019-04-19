@@ -2,4 +2,4 @@
 when:
 - target: { channel: GHNH5M3Q9 }
 then:
-- user: { id: U0FUK0EBH }
+  user: { id: U0FUK0EBH }

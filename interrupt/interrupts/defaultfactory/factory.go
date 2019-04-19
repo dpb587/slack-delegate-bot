@@ -32,7 +32,7 @@ func New(conditionsFactory conditions.Factory, slackAPI *slack.Client) interrupt
 	f.factory["coalesce"] = coalescefactory.New(f)
 	f.factory["if"] = conditionalfactory.New(f, conditionsFactory)
 	f.factory["literal"] = literalfactory.New()
-	f.factory["literalmap"] = literalmapfactory.New()
+	f.factory["literalmap"] = literalmapfactory.New(f)
 	f.factory["pairist"] = pairistfactory.New()
 	f.factory["topiclookup"] = topiclookupfactory.New(slackAPI)
 	f.factory["union"] = unionfactory.New(f)

@@ -6,6 +6,7 @@ import (
 	"sort"
 
 	"github.com/dpb587/slack-delegate-bot/condition/conditions"
+	"github.com/dpb587/slack-delegate-bot/config"
 	"github.com/dpb587/slack-delegate-bot/handler"
 	"github.com/dpb587/slack-delegate-bot/handler/handlers/multiple"
 	"github.com/dpb587/slack-delegate-bot/handler/handlers/single"
@@ -28,7 +29,7 @@ func New(interruptsFactory interrupts.Factory, conditionsFactory conditions.Fact
 
 type Options struct {
 	When []interface{} `yaml:"when"`
-	Then []interface{} `yaml:"then"`
+	Then interface{}   `yaml:"then"`
 	With WithOptions   `yaml:"with"`
 }
 
@@ -80,7 +81,12 @@ func (l Loader) loadPath(path string) (handler.Handler, error) {
 		h.Condition = when
 	}
 
-	then, err := l.interruptsFactory.Create("union", parsed.Then)
+	thenKey, thenOptions, err := config.KeyValueTuple(parsed.Then)
+	if err != nil {
+		return nil, errors.Wrap(err, "parsing then")
+	}
+
+	then, err := l.interruptsFactory.Create(thenKey, thenOptions)
 	if err != nil {
 		return nil, errors.Wrap(err, "building then")
 	}

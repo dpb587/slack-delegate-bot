@@ -109,8 +109,17 @@ func (s *Service) buildMessage(msg slack.Msg) (message.Message, bool) {
 	}
 
 	if msg.Channel[0] == 'D' { // TODO better way to detect if this is our bot DM?
+		re, err := regexp.Compile(`<#([^|]+)|([^>]+)>`)
+		if err != nil {
+			panic(err)
+		}
+
+		matches := re.FindStringSubmatch(msg.Text)
+		if len(matches) > 0 {
+			intmsg.InterruptTarget = matches[1]
+		}
+
 		intmsg.OriginType = message.DirectMessageOriginType
-		intmsg.InterruptTarget = intmsg.Text
 
 		return intmsg, true
 	} else if strings.Contains(msg.Text, fmt.Sprintf("<@%s>", s.self.ID)) {
@@ -125,6 +134,8 @@ func (s *Service) buildMessage(msg slack.Msg) (message.Message, bool) {
 		}
 
 		return intmsg, true
+	} else {
+		// TODO respond back about not recognizing the message?
 	}
 
 	return message.Message{}, false

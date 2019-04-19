@@ -1,5 +1,7 @@
 ---
 priority: -1000
 then:
-- coalesce:
+  coalesce:
   - topiclookup: ~
+with:
+  empty_message: Sorry, I wasn't able to automagically find an interrupt for you.
