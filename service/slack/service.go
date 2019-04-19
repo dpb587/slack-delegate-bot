@@ -134,8 +134,6 @@ func (s *Service) buildMessage(msg slack.Msg) (message.Message, bool) {
 		}
 
 		return intmsg, true
-	} else {
-		// TODO respond back about not recognizing the message?
 	}
 
 	return message.Message{}, false

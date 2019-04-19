@@ -25,7 +25,7 @@ type Root struct {
 	Handlers []string `long:"handler" description:"Path to handler configuration"`
 	handler  handler.Handler
 
-	LogLevel args.LogLevel `long:"log-level" description:"Show additional levels of log messages" env:"LOG_LEVEL" default:"ERROR"`
+	LogLevel args.LogLevel `long:"log-level" description:"Show additional levels of log messages" env:"LOG_LEVEL" default:"INFO"`
 	logger   logrus.FieldLogger
 }
 
