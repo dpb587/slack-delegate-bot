@@ -32,7 +32,7 @@ jobs:
   - put: cf-app
     params:
       # current_app_name: ((app_name)) # https://github.com/concourse/cf-resource/issues/62
-      manifest: app/manifest.yml
+      manifest: app/cf.yml
       path: app
       vars:
         slack_token: ((slack_token))
@@ -41,6 +41,7 @@ resources:
   type: git
   source:
     uri: https://github.com/dpb587/slack-delegate-bot.git
+    branch: ibaas
 - name: cf-app
   type: cf
   source:
