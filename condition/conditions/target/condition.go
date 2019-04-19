@@ -12,9 +12,5 @@ type Condition struct {
 var _ condition.Condition = &Condition{}
 
 func (c Condition) Evaluate(m message.Message) (bool, error) {
-	if m.InterruptTarget == c.Channel {
-		return true, nil
-	}
-
-	return false, nil
+	return m.InterruptTarget == c.Channel, nil
 }

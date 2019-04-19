@@ -11,19 +11,14 @@ func RemarshalYAML(from interface{}, to interface{}) error {
 		return errors.Wrap(err, "marshaling")
 	}
 
-	return UnmarshalYAML(bytes, to)
+	return UnmarshalYAMLStrict(bytes, to)
 }
 
-func UnmarshalYAML(from []byte, to interface{}) error {
+func UnmarshalYAMLStrict(from []byte, to interface{}) error {
 	err := yaml.UnmarshalStrict(from, to)
 	if err != nil {
 		return errors.Wrap(err, "unmarshalling")
 	}
-	//
-	// defaultable, ok := to.(Defaultable)
-	// if ok {
-	// 	defaultable.ApplyDefaults()
-	// }
 
 	return nil
 }

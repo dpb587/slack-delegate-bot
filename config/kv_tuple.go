@@ -16,7 +16,7 @@ func KeyValueTuple(from interface{}) (string, interface{}, error) {
 	for k := range fromMap {
 		kStr, ok := k.(string)
 		if !ok {
-			return "", nil, fmt.Errorf("expected string keys: found %v", k)
+			return "", nil, fmt.Errorf("expected string key: found %v", k)
 		}
 
 		keys = append(keys, kStr)
