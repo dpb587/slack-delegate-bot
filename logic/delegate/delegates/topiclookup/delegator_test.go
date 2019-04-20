@@ -6,7 +6,7 @@ import (
 	"github.com/dpb587/slack-delegate-bot/logic/delegate"
 	. "github.com/dpb587/slack-delegate-bot/logic/delegate/delegates/topiclookup"
 	"github.com/dpb587/slack-delegate-bot/logic/delegate/delegates/topiclookup/topiclookupfakes"
-	"github.com/dpb587/slack-delegate-bot/message"
+	"github.com/dpb587/slack-delegate-bot/delegatebot/message"
 	"github.com/nlopes/slack"
 
 	. "github.com/onsi/ginkgo"

@@ -4,7 +4,7 @@ import (
 	"github.com/dpb587/go-pairist/api"
 	"github.com/dpb587/go-pairist/denormalized"
 	"github.com/dpb587/slack-delegate-bot/logic/delegate"
-	"github.com/dpb587/slack-delegate-bot/message"
+	"github.com/dpb587/slack-delegate-bot/delegatebot/message"
 )
 
 type Delegator struct {

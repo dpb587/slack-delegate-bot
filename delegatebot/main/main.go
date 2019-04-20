@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/dpb587/slack-delegate-bot/main/cmd"
-	"github.com/dpb587/slack-delegate-bot/main/opts"
+	"github.com/dpb587/slack-delegate-bot/delegatebot/main/cmd"
+	"github.com/dpb587/slack-delegate-bot/delegatebot/main/opts"
 	"github.com/jessevdk/go-flags"
 )
 

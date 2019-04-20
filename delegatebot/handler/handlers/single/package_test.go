@@ -9,5 +9,5 @@ import (
 
 func TestTopiclookup(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "github.com/dpb587/slack-delegate-bot/handler/handlers/single")
+	RunSpecs(t, "github.com/dpb587/slack-delegate-bot/delegatebot/handler/handlers/single")
 }

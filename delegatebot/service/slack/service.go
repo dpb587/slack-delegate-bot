@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dpb587/slack-delegate-bot/handler"
+	"github.com/dpb587/slack-delegate-bot/delegatebot/handler"
 	"github.com/dpb587/slack-delegate-bot/logic/delegate/delegates"
-	"github.com/dpb587/slack-delegate-bot/message"
+	"github.com/dpb587/slack-delegate-bot/delegatebot/message"
 	"github.com/nlopes/slack"
 	"github.com/sirupsen/logrus"
 )

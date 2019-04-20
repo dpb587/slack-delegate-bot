@@ -1,6 +1,6 @@
 package cmd
 
-import "github.com/dpb587/slack-delegate-bot/main/opts"
+import "github.com/dpb587/slack-delegate-bot/delegatebot/main/opts"
 
 type Root struct {
 	*opts.Root

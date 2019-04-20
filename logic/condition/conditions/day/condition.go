@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/dpb587/slack-delegate-bot/logic/condition"
-	"github.com/dpb587/slack-delegate-bot/message"
+	"github.com/dpb587/slack-delegate-bot/delegatebot/message"
 )
 
 type Condition struct {

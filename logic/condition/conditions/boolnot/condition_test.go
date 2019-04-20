@@ -3,7 +3,7 @@ package boolnot_test
 import (
 	"github.com/dpb587/slack-delegate-bot/logic/condition/conditionfakes"
 	. "github.com/dpb587/slack-delegate-bot/logic/condition/conditions/boolnot"
-	"github.com/dpb587/slack-delegate-bot/message"
+	"github.com/dpb587/slack-delegate-bot/delegatebot/message"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

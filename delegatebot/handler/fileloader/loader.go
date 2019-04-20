@@ -6,9 +6,9 @@ import (
 	"sort"
 
 	"github.com/dpb587/slack-delegate-bot/config"
-	"github.com/dpb587/slack-delegate-bot/handler"
-	"github.com/dpb587/slack-delegate-bot/handler/handlers/multiple"
-	"github.com/dpb587/slack-delegate-bot/handler/handlers/single"
+	"github.com/dpb587/slack-delegate-bot/delegatebot/handler"
+	"github.com/dpb587/slack-delegate-bot/delegatebot/handler/handlers/multiple"
+	"github.com/dpb587/slack-delegate-bot/delegatebot/handler/handlers/single"
 	"github.com/dpb587/slack-delegate-bot/logic/condition/conditions"
 	"github.com/dpb587/slack-delegate-bot/logic/delegate/delegates"
 	"github.com/pkg/errors"
