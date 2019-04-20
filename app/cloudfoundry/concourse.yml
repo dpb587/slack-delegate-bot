@@ -27,7 +27,7 @@ jobs:
           export GOPATH=$PWD
           task_dir=$PWD
           cd src/github.com/dpb587/slack-delegate-bot
-          go build -o app/cloudfoundry/exec ./main
+          go build -o app/cloudfoundry/exec ./delegatebot/main
           cp -rp app/cloudfoundry/. $task_dir/app
   - put: cf-app
     params:

@@ -1,4 +1,4 @@
-package fileloader
+package factory
 
 import (
 	"io/ioutil"
@@ -15,13 +15,13 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-type Loader struct {
+type FileLoader struct {
 	delegatorsFactory delegates.Factory
 	conditionsFactory conditions.Factory
 }
 
-func New(delegatorsFactory delegates.Factory, conditionsFactory conditions.Factory) *Loader {
-	return &Loader{
+func NewFileLoader(delegatorsFactory delegates.Factory, conditionsFactory conditions.Factory) *FileLoader {
+	return &FileLoader{
 		delegatorsFactory: delegatorsFactory,
 		conditionsFactory: conditionsFactory,
 	}
@@ -41,7 +41,7 @@ type ConfigFileDelegateBotWithOptions struct {
 	EmptyMessage string `yaml:"empty_message"`
 }
 
-func (l Loader) Load(paths []string) (handler.Handler, error) {
+func (l FileLoader) Load(paths []string) (handler.Handler, error) {
 	var handlers []handler.Handler
 
 	paths, err := l.squashPaths(paths)
@@ -61,7 +61,7 @@ func (l Loader) Load(paths []string) (handler.Handler, error) {
 	return multiple.Handler{Handlers: handlers}, nil
 }
 
-func (l Loader) loadPath(path string) (handler.Handler, error) {
+func (l FileLoader) loadPath(path string) (handler.Handler, error) {
 	h := single.Handler{}
 
 	pathBytes, err := ioutil.ReadFile(path)
@@ -104,7 +104,7 @@ func (l Loader) loadPath(path string) (handler.Handler, error) {
 	return h, nil
 }
 
-func (l Loader) squashPaths(paths []string) ([]string, error) {
+func (l FileLoader) squashPaths(paths []string) ([]string, error) {
 	var squashed []string
 
 	for _, path := range paths {

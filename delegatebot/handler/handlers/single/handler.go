@@ -2,9 +2,9 @@ package single
 
 import (
 	"github.com/dpb587/slack-delegate-bot/delegatebot/handler"
+	"github.com/dpb587/slack-delegate-bot/delegatebot/message"
 	"github.com/dpb587/slack-delegate-bot/logic/condition"
 	"github.com/dpb587/slack-delegate-bot/logic/delegate"
-	"github.com/dpb587/slack-delegate-bot/delegatebot/message"
 )
 
 type Handler struct {

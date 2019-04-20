@@ -3,13 +3,13 @@ package opts
 import (
 	"os"
 
-	conditionsfactory "github.com/dpb587/slack-delegate-bot/logic/condition/conditions/defaultfactory"
 	"github.com/dpb587/slack-delegate-bot/delegatebot/handler"
-	"github.com/dpb587/slack-delegate-bot/delegatebot/handler/fileloader"
-	interruptsfactory "github.com/dpb587/slack-delegate-bot/logic/delegate/delegates/defaultfactory"
+	handlerfactory "github.com/dpb587/slack-delegate-bot/delegatebot/handler/factory"
 	"github.com/dpb587/slack-delegate-bot/delegatebot/main/args"
 	"github.com/dpb587/slack-delegate-bot/delegatebot/service/http"
 	"github.com/dpb587/slack-delegate-bot/delegatebot/service/slack"
+	conditionsfactory "github.com/dpb587/slack-delegate-bot/logic/condition/conditions/defaultfactory"
+	interruptsfactory "github.com/dpb587/slack-delegate-bot/logic/delegate/delegates/defaultfactory"
 	slackapi "github.com/nlopes/slack"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -22,8 +22,8 @@ type Root struct {
 
 	httpService *http.Service
 
-	Handlers []string `long:"handler" description:"Path to handler configuration"`
-	handler  handler.Handler
+	Configs []string `long:"config" description:"Path to configuration files"`
+	handler handler.Handler
 
 	LogLevel args.LogLevel `long:"log-level" description:"Show additional levels of log messages" env:"LOG_LEVEL" default:"INFO"`
 	logger   logrus.FieldLogger
@@ -47,10 +47,10 @@ func (r *Root) GetHandler() (handler.Handler, error) {
 		conditions := conditionsfactory.New()
 		interrupts := interruptsfactory.New(conditions, r.GetSlackAPI())
 
-		loader := fileloader.New(interrupts, conditions)
-		h, err := loader.Load(r.Handlers)
+		loader := handlerfactory.NewFileLoader(interrupts, conditions)
+		h, err := loader.Load(r.Configs)
 		if err != nil {
-			return nil, errors.Wrap(err, "loading handlers")
+			return nil, errors.Wrap(err, "loading configs")
 		}
 
 		r.handler = h

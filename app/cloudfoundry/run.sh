@@ -1,3 +1,3 @@
 #!/bin/bash
 
-exec ./exec --handler=handlers/*.yml --handler=handlers/default run
+exec ./exec --config=config/*.yml --config=config/default.delegatebot run
