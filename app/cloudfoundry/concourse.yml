@@ -1,9 +1,39 @@
 ---
 jobs:
-- name: deploy
+- name: test
+  serial: true
   plan:
   - aggregate:
     - get: repo
+      trigger: true
+  - task: unit-tests
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: golang
+          tag: 1.11.4-stretch
+      inputs:
+      - name: repo
+        path: src/github.com/dpb587/slack-delegate-bot
+      run:
+        path: bash
+        args:
+        - -c
+        - |
+          set -eu
+          export GOPATH=$PWD
+          export PATH=$GOPATH/bin:$PATH
+          cd src/github.com/dpb587/slack-delegate-bot
+          go install ./vendor/github.com/onsi/ginkgo/ginkgo
+          ./bin/test-unit
+- name: deploy
+  serial: true
+  plan:
+  - aggregate:
+    - get: repo
+      passed: [test]
       trigger: true
   - task: build-app
     config:

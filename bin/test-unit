@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+base=$( cd "$( dirname "$0" )/.." && pwd )
+
+cd "$base"
+
+echo -e "\n Running unit tests..."
+ginkgo -r -race -keepGoing -trace -skipPackage="vendor" "$@"
