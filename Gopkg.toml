@@ -24,6 +24,11 @@
 #   go-tests = true
 #   unused-packages = true
 
+required = ["github.com/onsi/ginkgo/ginkgo", "github.com/maxbrunsfeld/counterfeiter"]
+
+[[override]]
+  name = "gopkg.in/fsnotify.v1"
+  source = "gopkg.in/fsnotify/fsnotify.v1"
 
 [[constraint]]
   name = "github.com/nlopes/slack"

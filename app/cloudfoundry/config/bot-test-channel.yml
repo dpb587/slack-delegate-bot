@@ -1,0 +1,6 @@
+---
+delegatebot:
+  watch:
+  - target: { channel: GHNH5M3Q9 }
+  delegate:
+    user: { id: U0FUK0EBH }

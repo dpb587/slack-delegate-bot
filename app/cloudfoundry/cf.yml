@@ -1,0 +1,10 @@
+---
+applications:
+- name: cloudfoundry-slack-delegate-bot
+  memory: 32M
+  instances: 1
+  buildpack: https://github.com/shageman/buildpack-binary
+  env:
+    SLACK_TOKEN: ((slack_token))
+  routes:
+  - route: cloudfoundry-slack-delegate-bot.cfapps.io

@@ -1,0 +1,52 @@
+---
+jobs:
+- name: deploy
+  plan:
+  - aggregate:
+    - get: repo
+      trigger: true
+  - task: build-app
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: golang
+          tag: 1.11.4-stretch
+      inputs:
+      - name: repo
+        path: src/github.com/dpb587/slack-delegate-bot
+      outputs:
+      - name: app
+      run:
+        path: bash
+        args:
+        - -c
+        - |
+          set -eu
+          export GOPATH=$PWD
+          task_dir=$PWD
+          cd src/github.com/dpb587/slack-delegate-bot
+          go build -o app/cloudfoundry/exec ./delegatebot/main
+          cp -rp app/cloudfoundry/. $task_dir/app
+  - put: cf-app
+    params:
+      # current_app_name: ((app_name)) # https://github.com/concourse/cf-resource/issues/62
+      manifest: app/cf.yml
+      path: app
+      vars:
+        slack_token: ((slack_token))
+resources:
+- name: repo
+  type: git
+  source:
+    uri: https://github.com/dpb587/slack-delegate-bot.git
+    branch: ibaas
+- name: cf-app
+  type: cf
+  source:
+    api: https://api.run.pivotal.io
+    username: ((app_username))
+    password: ((app_password))
+    organization: ((app_organization))
+    space: ((app_space))
