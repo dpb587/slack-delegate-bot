@@ -41,7 +41,7 @@ resources:
   type: git
   source:
     uri: https://github.com/dpb587/slack-delegate-bot.git
-    branch: ibaas
+    branch: master
 - name: cf-app
   type: cf
   source:
