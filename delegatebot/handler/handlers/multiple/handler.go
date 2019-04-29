@@ -48,7 +48,7 @@ func (h Handler) Execute(m *message.Message) (handler.MessageResponse, error) {
 			return response, nil
 		}
 
-		if r.EmptyMessage != "" {
+		if response.EmptyMessage == "" && r.EmptyMessage != "" {
 			response.EmptyMessage = r.EmptyMessage
 		}
 	}

@@ -2,12 +2,7 @@
 
 A bot for pulling others into a conversation.
 
-    status: alpha
-    todo: test coverage
-    todo: bot inviting interrupt mentions if they're not already in the channel
-    todo: cf deployment automation
-    todo: DM parsing channel names instead of IDs
-    todo: better logging
+For [cloudfoundry.slack.com](https://slack.cloudfoundry.org/), the bot is configured in [`app/cloudfoundry/config`](app/cloudfoundry/config) and deployed to [Pivotal Web Services](https://run.pivotal.io/). Want to use it in that workspace? Send a pull request or discuss in an issue.
 
 
 ## Usage
@@ -41,42 +36,43 @@ For private interrupt lookup, direct message (with the channel, if relevant):
 The bot is configured through one or more configuration files which look like the following:
 
 ```yaml
-# a list of conditions for this interrupt policy
-when:
-- target: { channel: bosh } # global channel ID
+delegatebot:
+  # a list of conditions for this interrupt policy
+  watch:
+  - target: { channel: bosh } # global channel ID
 
-# a list of users to interrupt
-then:
+  # a list of users to pull in
+  delegate:
 
-# based on a role from pairist
-- pairist:
-    team: bosh-director
-    role: interrupt
+  # based on a role from pairist
+  - pairist:
+      team: bosh-director
+      role: interrupt
 
-# or statically
-- user:
-    id: U0FUK0EBH
+  # or statically
+  - user:
+      id: U0FUK0EBH
 
-# or a static group
-- usergroup:
-    id: S309JAD1P
-    alias: openstack-cpi
+  # or a static group
+  - usergroup:
+      id: S309JAD1P
+      alias: openstack-cpi
 
-# or only during business hours
-- if:
-    when:
-    - hours: { tz: America/Los_Angeles, start: 09:00, end: 18:00 }
-    - day: { tz: America/Los_Angeles, days: [ Mon, Tue, Wed, Thu, Fri ] }
-    then:
-      pairist:
-          team: bosh-director
-          role: interrupt
+  # or only during business hours
+  - if:
+      when:
+      - hours: { tz: America/Los_Angeles, start: 09:00, end: 18:00 }
+      - day: { tz: America/Los_Angeles, days: [ Mon, Tue, Wed, Thu, Fri ] }
+      then:
+        pairist:
+            team: bosh-director
+            role: interrupt
 ```
 
 
-#### Interrupts
+#### Delegates
 
-Interrupts are used to lookup someone who can be contacted.
+Delegates are configured to lookup someone who can be contacted.
 
 
 ##### `channeltopic`
@@ -271,8 +267,13 @@ or:
 Run the bot...
 
 ```
-$ go run ./main --handler=example/cloudfoundry/*.yml --handler=example/cloudfoundry/default/global.yml run
+$ go run ./delegatebot/main --handler=example/cloudfoundry/*.yml --handler=example/cloudfoundry/default/global.yml run
 ```
+
+
+### Deployment
+
+See [`app/cloudfoundry`](app/cloudfoundry) for an example.
 
 
 ## License

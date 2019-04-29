@@ -1,8 +1,8 @@
 package boolor
 
 import (
-	"github.com/dpb587/slack-delegate-bot/logic/condition"
 	"github.com/dpb587/slack-delegate-bot/delegatebot/message"
+	"github.com/dpb587/slack-delegate-bot/logic/condition"
 )
 
 type Condition struct {
