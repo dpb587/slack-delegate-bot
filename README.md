@@ -262,12 +262,23 @@ or:
 ```
 
 
+
+### Environment Preparation
+
+Before running the app, you may want to create a [slack bot user](https://api.slack.com/bot-users) if you haven't already and invite the bot to a channel. Additionally, the app expects that the following environment variable is present:
+
+ * `SLACK_TOKEN` - an API token for accessing [Slack](https://slack.com) (create one [here](https://apps.slack.com/apps/A0F7YS25R-bots))
+
+
+
 ### Execution
 
 Run the bot...
 
-```
-$ go run ./delegatebot/main --handler=example/cloudfoundry/*.yml --handler=example/cloudfoundry/default/global.yml run
+```bash
+$ go run ./delegatebot/main \
+    --config=app/cloudfoundry/config/*.yml \
+    --config=app/cloudfoundry/config/default.delegatebot run
 ```
 
 
