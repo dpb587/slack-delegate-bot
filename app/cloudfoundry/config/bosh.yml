@@ -21,7 +21,7 @@ delegatebot:
             from:
               pairist:
                 team: bosh-director
-                role: interrupt
+                role: Interrupt
             users:
               Charles: U03RC8WQ6
               Rebecca: U8YCN97Q9
