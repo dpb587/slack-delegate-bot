@@ -44,47 +44,45 @@ func (s *Service) Run() error {
 				s.logger.Infof("connected: %#+v\n", s.self)
 
 			case *slack.MessageEvent:
-				if ev.Msg.Type == "message" && ev.Msg.SubType != "message_deleted" {
-					intmsg, useful := s.buildMessage(ev.Msg)
-					if !useful {
-						continue
-					}
+				intmsg, useful := s.buildMessage(ev.Msg)
+				if !useful {
+					continue
+				}
 
-					s.logger.Debugf("received message: %#+v", intmsg)
+				s.logger.Debugf("received message: %#+v", intmsg)
 
-					response, err := s.handler.Execute(&intmsg)
-					if err != nil {
-						s.logger.Errorf("failed to apply handler: %v", err)
+				response, err := s.handler.Execute(&intmsg)
+				if err != nil {
+					s.logger.Errorf("failed to apply handler: %v", err)
 
-						continue
-					}
+					continue
+				}
 
-					var msg string
+				var msg string
 
-					if len(response.Delegates) > 0 {
-						msg = delegates.Join(response.Delegates, " ")
-
-						if intmsg.OriginType == message.ChannelOriginType {
-							msg = fmt.Sprintf("^ %s", msg)
-						}
-					} else if response.EmptyMessage != "" {
-						msg = response.EmptyMessage
-					}
-
-					if msg == "" {
-						s.logger.Debugf("no response")
-
-						continue
-					}
-
-					outgoing := rtm.NewOutgoingMessage(msg, ev.Msg.Channel)
+				if len(response.Delegates) > 0 {
+					msg = delegates.Join(response.Delegates, " ")
 
 					if intmsg.OriginType == message.ChannelOriginType {
-						outgoing.ThreadTimestamp = ev.Msg.Timestamp
+						msg = fmt.Sprintf("^ %s", msg)
 					}
-
-					rtm.SendMessage(outgoing)
+				} else if response.EmptyMessage != "" {
+					msg = response.EmptyMessage
 				}
+
+				if msg == "" {
+					s.logger.Debugf("no response")
+
+					continue
+				}
+
+				outgoing := rtm.NewOutgoingMessage(msg, ev.Msg.Channel)
+
+				if intmsg.OriginType == message.ChannelOriginType {
+					outgoing.ThreadTimestamp = ev.Msg.Timestamp
+				}
+
+				rtm.SendMessage(outgoing)
 			case *slack.RTMError:
 				s.logger.Warnf("RTM: %s", ev.Error())
 
@@ -100,6 +98,20 @@ func (s *Service) Run() error {
 }
 
 func (s *Service) buildMessage(msg slack.Msg) (message.Message, bool) {
+	if msg.Type != "message" {
+		return message.Message{}, false
+	} else if msg.SubType == "message_deleted" {
+		// no sense responding to deleted message notifications
+		return message.Message{}, false
+	} else if msg.SubType == "group_topic" {
+		// no sense responding to a reference in the topic
+		// trivia: slack doesn't support topic threads, but still allows bots to
+		// respond which means you get mentioned, but the browser app doesn't
+		// render the thread in New Threads so you can't mark it as read unless you
+		// use the mobile app (which happens to show it as -1 replies).
+		return message.Message{}, false
+	}
+
 	intmsg := message.Message{
 		Origin:          msg.Channel,
 		OriginType:      message.ChannelOriginType,
