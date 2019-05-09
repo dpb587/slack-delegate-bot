@@ -36,8 +36,19 @@ delegatebot:
         - day: { tz: Europe/Berlin, days: [ Mon, Tue, Wed, Thu, Fri ] }
         - not: { date: { tz: Europe/Berlin, dates: [ 2019-01-01, 2019-01-06, 2019-04-19, 2019-04-22, 2019-05-01, 2019-05-30, 2019-06-10, 2019-06-20, 2019-10-03, 2019-10-31, 2019-11-01, 2019-12-25, 2019-12-26 ] } }
         then:
-          usergroup:
-            id: S309JAD1P
-            alias: "openstack-cpi"
+          literalmap:
+            from:
+              pairist:
+                team: bosh-europe
+                role: interrupt
+            users:
+              Beyhan: U0D8E67LZ
+              David: U66SLUVQC
+              Denis: UAQ9C5YSH
+              Florian: U6HHKKQNT
+              Kai: U6H6QCECD
+              Max: U6GCKEN9H
+              Sebastian: U8MRYTRHU
+              Vladimir: UCZCG5L84
   options:
     empty_message: Sorry, no interrupt is available right now. The community may be able to help, or feel free to ping again later.
