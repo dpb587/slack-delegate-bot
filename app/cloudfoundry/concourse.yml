@@ -57,8 +57,11 @@ jobs:
           export GOPATH=$PWD
           task_dir=$PWD
           cd src/github.com/dpb587/slack-delegate-bot
-          go build -o app/cloudfoundry/exec ./delegatebot/main
+          go build -o app/cloudfoundry/bot ./delegatebot/main
           cp -rp app/cloudfoundry/. $task_dir/app
+          wget -O $task_dir/app/ytt https://github.com/k14s/ytt/releases/download/v0.9.0/ytt-linux-amd64
+          echo "f1bccd1dcc3410099f883d9d7ba91bf49f0b096202af9c114d7450028a96c24b  $task_dir/app/ytt" | shasum -c
+          chmod +x $task_dir/app/ytt
   - put: cf-app
     params:
       # current_app_name: ((app_name)) # https://github.com/concourse/cf-resource/issues/62

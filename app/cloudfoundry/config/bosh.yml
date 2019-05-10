@@ -1,21 +1,16 @@
 ---
+#@ load("hours.lib.yml", "Pivotal_US", "Pivotal_CA_Ontario", "SAP_DE_Walldorf")
 delegatebot:
   watch:
   - target: { channel: &bosh C02HPPYQ2 }
   - target: { channel: &boshcoredev C094QRLEQ }
-  delegate: &interrupts
+  delegate:
     union:
     - if:
         when:
         - or:
-          - and:
-            - hours: { tz: America/Los_Angeles, start: 09:00, end: 18:00 }
-            - day: { tz: America/Los_Angeles, days: [ Mon, Tue, Wed, Thu, Fri ] }
-            - not: { date: { tz: America/Los_Angeles, dates: [ 2019-01-01, 2019-01-21, 2019-02-18, 2019-05-27, 2019-07-04, 2019-09-02, 2019-11-28, 2019-11-29, 2019-12-25 ] } }
-          - and:
-            - hours: { tz: America/Toronto, start: 09:00, end: 18:00 }
-            - day: { tz: America/Toronto, days: [ Mon, Tue, Wed, Thu, Fri ] }
-            - not: { date: { tz: America/Toronto, dates: [ 2019-01-01, 2019-02-18, 2019-04-19, 2019-05-20, 2019-07-01, 2019-08-05, 2019-09-02, 2019-10-14, 2019-12-25, 2019-12-26 ] } }
+          - #@ Pivotal_US("America/Los_Angeles")
+          - #@ Pivotal_CA_Ontario("America/Toronto")
         then:
           literalmap:
             from:
@@ -32,9 +27,7 @@ delegatebot:
               Jim: U02QZ1E3G
     - if:
         when:
-        - hours: { tz: Europe/Berlin, start: 09:00, end: 18:00 }
-        - day: { tz: Europe/Berlin, days: [ Mon, Tue, Wed, Thu, Fri ] }
-        - not: { date: { tz: Europe/Berlin, dates: [ 2019-01-01, 2019-01-06, 2019-04-19, 2019-04-22, 2019-05-01, 2019-05-30, 2019-06-10, 2019-06-20, 2019-10-03, 2019-10-31, 2019-11-01, 2019-12-25, 2019-12-26 ] } }
+        - #@ SAP_DE_Walldorf()
         then:
           literalmap:
             from:
