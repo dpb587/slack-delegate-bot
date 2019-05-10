@@ -28,8 +28,6 @@ jobs:
           cd src/github.com/dpb587/slack-delegate-bot
           go install ./vendor/github.com/onsi/ginkgo/ginkgo
           ./bin/test-unit
-  - put: "deploy-status"
-    params: { state: "success", commit: "repo" }
 - name: deploy
   serial: true
   plan:
@@ -68,6 +66,8 @@ jobs:
       path: app
       vars:
         slack_token: ((slack_token))
+  - put: "deploy-status"
+    params: { state: "success", commit: "repo" }
 resources:
 - name: repo
   type: git
