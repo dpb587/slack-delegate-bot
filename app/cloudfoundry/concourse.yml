@@ -28,6 +28,8 @@ jobs:
           cd src/github.com/dpb587/slack-delegate-bot
           go install ./vendor/github.com/onsi/ginkgo/ginkgo
           ./bin/test-unit
+  - put: "deploy-status"
+    params: { state: "success", commit: "repo" }
 - name: deploy
   serial: true
   plan:
@@ -80,3 +82,15 @@ resources:
     password: ((app_password))
     organization: ((app_organization))
     space: ((app_space))
+- name: deploy-status
+  type: github-status
+  source:
+    repository: dpb587/slack-delegate-bot
+    access_token: ((github_access_token))
+    context: deployed
+resource_types:
+- name: "github-status"
+  type: "docker-image"
+  source:
+    repository: "dpb587/github-status-resource"
+    tag: "master"
