@@ -10,6 +10,7 @@ import (
 	boolorfactory "github.com/dpb587/slack-delegate-bot/logic/condition/conditions/boolor/factory"
 	datefactory "github.com/dpb587/slack-delegate-bot/logic/condition/conditions/date/factory"
 	dayfactory "github.com/dpb587/slack-delegate-bot/logic/condition/conditions/day/factory"
+	embedfactory "github.com/dpb587/slack-delegate-bot/logic/condition/conditions/embed/factory"
 	hoursfactory "github.com/dpb587/slack-delegate-bot/logic/condition/conditions/hours/factory"
 	targetfactory "github.com/dpb587/slack-delegate-bot/logic/condition/conditions/target/factory"
 )
@@ -32,6 +33,7 @@ func New() conditions.Factory {
 	f.factory["day"] = dayfactory.New()
 	f.factory["hours"] = hoursfactory.New()
 	f.factory["target"] = targetfactory.New()
+	f.factory["embed"] = embedfactory.New(f)
 
 	return f
 }
