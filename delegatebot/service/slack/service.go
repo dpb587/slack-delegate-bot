@@ -1,16 +1,9 @@
 package slack
 
 import (
-	"errors"
-	"fmt"
-	"regexp"
-	"strings"
-	"time"
-
 	"github.com/dpb587/slack-delegate-bot/delegatebot/handler"
-	"github.com/dpb587/slack-delegate-bot/delegatebot/message"
-	"github.com/dpb587/slack-delegate-bot/logic/delegate/delegates"
 	"github.com/nlopes/slack"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
 
@@ -18,71 +11,64 @@ type Service struct {
 	handler handler.Handler
 	logger  logrus.FieldLogger
 
-	api  *slack.Client
-	self *slack.UserDetails
+	messageParser  *MessageParser
+	messageHandler *MessageHandler
+
+	api *slack.Client
+	rtm *slack.RTM
 }
 
-func New(api *slack.Client, handler_ handler.Handler, logger logrus.FieldLogger) *Service {
+func New(api *slack.Client, interruptHandler handler.Handler, logger logrus.FieldLogger) *Service {
+	rtm := api.NewRTM()
+
 	return &Service{
-		api:     api,
-		handler: handler_,
-		logger:  logger,
+		api:            api,
+		rtm:            rtm,
+		messageHandler: NewMessageHandler(rtm, interruptHandler),
+		logger:         logger,
 	}
 }
 
 func (s *Service) Run() error {
-	rtm := s.api.NewRTM()
-	go rtm.ManageConnection()
+	go s.rtm.ManageConnection()
 
 	for {
 		select {
-		case msg := <-rtm.IncomingEvents:
+		case msg := <-s.rtm.IncomingEvents:
 			switch ev := msg.Data.(type) {
 			case *slack.ConnectedEvent:
-				s.self = ev.Info.User
+				s.messageParser = NewMessageParser(ev.Info.User)
 
-				s.logger.Infof("connected: %#+v\n", s.self)
-
+				s.logger.Infof("connected: %#+v\n", ev.Info.User)
 			case *slack.MessageEvent:
-				intmsg, useful := s.buildMessage(ev.Msg)
-				if !useful {
+				if s.messageParser == nil {
+					// we assign messageParser only after we're connected
+					s.logger.Errorf("received message, but no parser is available")
+
 					continue
 				}
 
-				s.logger.Debugf("received message: %#+v", intmsg)
-
-				response, err := s.handler.Execute(&intmsg)
+				incoming, err := s.messageParser.ParseMessage(ev.Msg)
 				if err != nil {
-					s.logger.Errorf("failed to apply handler: %v", err)
+					s.logger.Error(errors.Wrap(err, "parsing request"))
 
+					continue
+				} else if incoming == nil {
 					continue
 				}
 
-				var msg string
+				s.logger.Debugf("received message: %#+v", incoming)
 
-				if len(response.Delegates) > 0 {
-					msg = delegates.Join(response.Delegates, " ")
+				outgoing, err := s.messageHandler.GetResponse(*incoming, ev)
+				if err != nil {
+					s.logger.Error(errors.Wrap(err, "getting response"))
 
-					if intmsg.OriginType == message.ChannelOriginType {
-						msg = fmt.Sprintf("^ %s", msg)
-					}
-				} else if response.EmptyMessage != "" {
-					msg = response.EmptyMessage
-				}
-
-				if msg == "" {
-					s.logger.Debugf("no response")
-
+					continue
+				} else if outgoing == nil {
 					continue
 				}
 
-				outgoing := rtm.NewOutgoingMessage(msg, ev.Msg.Channel)
-
-				if intmsg.OriginType == message.ChannelOriginType {
-					outgoing.ThreadTimestamp = ev.Msg.Timestamp
-				}
-
-				rtm.SendMessage(outgoing)
+				s.rtm.SendMessage(outgoing)
 			case *slack.RTMError:
 				s.logger.Warnf("RTM: %s", ev.Error())
 
@@ -95,58 +81,4 @@ func (s *Service) Run() error {
 			}
 		}
 	}
-}
-
-func (s *Service) buildMessage(msg slack.Msg) (message.Message, bool) {
-	if msg.Type != "message" {
-		return message.Message{}, false
-	} else if msg.SubType == "message_deleted" {
-		// no sense responding to deleted message notifications
-		return message.Message{}, false
-	} else if msg.SubType == "group_topic" {
-		// no sense responding to a reference in the topic
-		// trivia: slack doesn't support topic threads, but still allows bots to
-		// respond which means you get mentioned, but the browser app doesn't
-		// render the thread in New Threads so you can't mark it as read unless you
-		// use the mobile app (which happens to show it as -1 replies).
-		return message.Message{}, false
-	}
-
-	intmsg := message.Message{
-		Origin:          msg.Channel,
-		OriginType:      message.ChannelOriginType,
-		InterruptTarget: msg.Channel,
-		Timestamp:       time.Now(), // TODO
-		Text:            msg.Text,
-	}
-
-	if msg.Channel[0] == 'D' { // TODO better way to detect if this is our bot DM?
-		re, err := regexp.Compile(`<#([^|]+)|([^>]+)>`)
-		if err != nil {
-			panic(err)
-		}
-
-		matches := re.FindStringSubmatch(msg.Text)
-		if len(matches) > 0 {
-			intmsg.InterruptTarget = matches[1]
-		}
-
-		intmsg.OriginType = message.DirectMessageOriginType
-
-		return intmsg, true
-	} else if strings.Contains(msg.Text, fmt.Sprintf("<@%s>", s.self.ID)) {
-		re, err := regexp.Compile(fmt.Sprintf(`<#([^|]+)|([^>]+)>\s+<@%s>`, regexp.QuoteMeta(s.self.ID)))
-		if err != nil {
-			panic(err)
-		}
-
-		matches := re.FindStringSubmatch(msg.Text)
-		if len(matches) > 0 {
-			intmsg.InterruptTarget = matches[1]
-		}
-
-		return intmsg, true
-	}
-
-	return message.Message{}, false
 }
