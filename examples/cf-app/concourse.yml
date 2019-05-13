@@ -1,0 +1,82 @@
+---
+jobs:
+- name: deploy
+  serial: true
+  plan:
+  - aggregate:
+    - get: slack-delegate-bot
+      trigger: true
+    - get: config
+      trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: alpine
+      inputs:
+      - name: slack-delegate-bot
+      - name: config
+      outputs:
+      - name: app
+      run:
+        path: sh
+        args:
+        - -c
+        - |
+          set -eu
+
+          # required when running the bot for user timezone configuration
+          apk add --no-cache tzdata
+
+          cp slack-delegate-bot/* app/exec
+          echo 'exec ./exec --config=config/*.yml --config=config/default.delegatebot ${COMMAND:-run}' > app/run.sh
+          chmod +x app/*
+
+          cat > app/cf.yml <<EOF
+          applications:
+          - name: ((app_name))
+            memory: 32M
+            instances: 1
+            buildpack: https://github.com/shageman/buildpack-binary
+            env:
+              SLACK_TOKEN: ((slack_token))
+            no-route: true
+          EOF
+
+          cp -rp config/config app/config
+
+          cd app
+
+          COMMAND=validate ./run.sh
+  - put: cf
+    params:
+      manifest: app/cf.yml
+      path: app
+resources:
+- name: slack-delegate-bot
+  type: metalink-repository
+  source:
+    uri: git+https://github.com/dpb587/slack-delegate-bot.git//published#artifacts
+    include_files:
+    - delegatebot-*-linux-amd64
+- name: config
+  type: git
+  source:
+    uri: ((config_uri))
+    private_key: ((config_private_key))
+    branch: ((config_branch))
+- name: cf
+  type: cf
+  source:
+    api: ((app_api))
+    username: ((app_username))
+    password: ((app_password))
+    organization: ((app_organization))
+    space: ((app_space))
+resource_types:
+- name: metalink-repository
+  type: docker-image
+  source:
+    repository: dpb587/metalink-repository-resource

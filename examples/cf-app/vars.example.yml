@@ -1,0 +1,12 @@
+app_api: https://api.run.pivotal.io
+app_username: somebody@example.com
+app_password: "...snip..."
+app_organization: community-tools
+app_space: development
+app_name: my-special-delegate-bot
+
+config_uri: https://github.com/example/my-special-delegate-bot.git
+config_private_key: ~
+config_branch: master
+
+slack_token: xoxb-...
