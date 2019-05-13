@@ -276,7 +276,7 @@ Before running the app, you may want to create a [slack bot user](https://api.sl
 Run the bot...
 
 ```bash
-$ go run ./delegatebot/main \
+$ go run ./cmd/delegatebot \
     --config=app/cloudfoundry/config/*.yml \
     --config=app/cloudfoundry/config/default.delegatebot run
 ```
