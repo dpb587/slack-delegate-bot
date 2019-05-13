@@ -7,6 +7,7 @@
     <hash type="sha-512">cf9432bf03fc8439a85c6752aaee4e536e35dd3ca5e7c9de2f6aa07a1ee8022c713615ba1bb2eb0b69f8e74f69ddb435508362ea5d0ebd7d14041eb72bec2195</hash>
     <size>11138120</size>
     <url>https://github.com/dpb587/slack-delegate-bot/releases/download/v0.0.1/delegatebot-0.0.1-darwin-amd64</url>
+    <version>0.0.1</version>
   </file>
   <file name="delegatebot-0.0.1-linux-amd64">
     <hash type="md5">9793dcb8e7bf417f9d32da14da239d01</hash>
@@ -15,6 +16,7 @@
     <hash type="sha-512">203f1ab8334cab985f1e264bb7e9b6f5aa2e596267ba092002fa213444c2aacbbf6e0cc7a17a45f97454ec6f7935eaa47ccf7282e27af6be699c016bdede97e0</hash>
     <size>11187391</size>
     <url>https://github.com/dpb587/slack-delegate-bot/releases/download/v0.0.1/delegatebot-0.0.1-linux-amd64</url>
+    <version>0.0.1</version>
   </file>
   <file name="delegatebot-0.0.1-windows-amd64.exe">
     <hash type="md5">bfd807ba6024bf99f30528180f829156</hash>
@@ -23,6 +25,7 @@
     <hash type="sha-512">92de1d947b3a11c774dd8666248f31e5c2c74479c19f63b5b9651a4c62cabdbbc0aac57e21820dd1aefed31b6c7b3b7780326148e0392d6db72d115e963e38e2</hash>
     <size>10853376</size>
     <url>https://github.com/dpb587/slack-delegate-bot/releases/download/v0.0.1/delegatebot-0.0.1-windows-amd64.exe</url>
+    <version>0.0.1</version>
   </file>
   <generator>metalink.dpb587.github.io/0.0.0</generator>
 </metalink>
