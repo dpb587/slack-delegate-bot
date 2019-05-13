@@ -25,6 +25,8 @@ mkdir -p tmp/build
 commit=$( git rev-parse HEAD | cut -c-10 )$( git diff-index --quiet HEAD -- || echo "+dirty" )
 built=$( date -u +%Y-%m-%dT%H:%M:%S+00:00 )
 
+export CGO_ENABLED=0
+
 for name in $bin_list ; do
   for os in $os_list ; do
     for arch in $arch_list ; do

@@ -58,12 +58,13 @@ jobs:
 
           cd src/github.com/dpb587/slack-delegate-bot
 
+          git rev-parse HEAD > "$release_dir/commit"
+
           ./scripts/build "$version"
           mv tmp/build "$release_dir/artifacts"
 
           cd "$release_dir"
 
-          ( cd "$task_dir/repo" ; git rev-parse HEAD ) > "commit"
           echo "$version" > version
           echo "v$version" > tag
           echo "Release v$version" > title
@@ -71,7 +72,7 @@ jobs:
           meta4 create
           for file in $( cd artifacts ; ls ); do
             meta4 import-file --version="$version" "artifacts/$file"
-            meta4 set-file-url --file="$file" https://github.com/dpb587/slack-delegate-bot/releases/download/v$version/$file
+            meta4 file-set-url --file="$file" https://github.com/dpb587/slack-delegate-bot/releases/download/v$version/$file
           done
   - put: version
     params:
@@ -89,7 +90,7 @@ jobs:
       name: release/tag
       tag: release/tag
       globs:
-      - release/blobs/*
+      - release/artifacts/*
     get_params:
       globs:
       - none
@@ -108,7 +109,9 @@ resources:
 - name: repo-artifacts
   type: metalink-repository
   source:
-    uri: git+https://github.com/dpb587/slack-delegate-bot.git//published#artifacts
+    uri: git+ssh://git@github.com:dpb587/slack-delegate-bot.git//published#artifacts
+    options:
+      private_key: ((git_private_key))
 - name: github-release
   type: github-release
   source:
@@ -122,6 +125,7 @@ resources:
     branch: ci-state
     driver: git
     file: version/master
+    private_key: ((git_private_key))
 resource_types:
 - name: metalink-repository
   type: docker-image
