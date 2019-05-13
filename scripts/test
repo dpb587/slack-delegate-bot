@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -eu
+
+base=$( cd "$( dirname "$0" )/.." && pwd )
+
+cd "$base"
+
+go run ./vendor/github.com/onsi/ginkgo/ginkgo -r -race -keepGoing -trace -skipPackage="vendor" "$@"
