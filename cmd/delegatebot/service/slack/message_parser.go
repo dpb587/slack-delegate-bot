@@ -36,6 +36,9 @@ func (p *MessageParser) ParseMessage(msg slack.Msg) (*message.Message, error) {
 		// render the thread in New Threads so you can't mark it as read unless you
 		// use the mobile app (which happens to show it as -1 replies).
 		return nil, nil
+	} else if msg.User == p.self.ID {
+		// avoid accidentally talking to ourselves into a recursive DoS
+		return nil, nil
 	}
 
 	incoming := &message.Message{

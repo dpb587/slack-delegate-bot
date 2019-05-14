@@ -25,6 +25,14 @@ var _ = Describe("MessageParser", func() {
 	})
 
 	Describe("ParseMessage", func() {
+		It("ignores messages from ourselves", func() {
+			msg.User = "U1234567"
+
+			res, err := subject.ParseMessage(msg)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(res).To(BeNil())
+		})
+
 		It("ignores non-message messages", func() {
 			msg.Type = "non-message"
 
