@@ -3,6 +3,7 @@ package slack
 import (
 	"fmt"
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
@@ -29,7 +30,7 @@ func (p *MessageParser) ParseMessage(msg slack.Msg) (*message.Message, error) {
 	} else if msg.SubType == "message_deleted" {
 		// no sense responding to deleted message notifications
 		return nil, nil
-	} else if msg.SubType == "group_topic" {
+	} else if msg.SubType == "group_topic" || strings.Contains(msg.Text, "set the channel topic: ") {
 		// no sense responding to a reference in the topic
 		// trivia: slack doesn't support topic threads, but still allows bots to
 		// respond which means you get mentioned, but the browser app doesn't

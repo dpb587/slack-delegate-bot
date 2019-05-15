@@ -57,6 +57,14 @@ var _ = Describe("MessageParser", func() {
 			Expect(res).To(BeNil())
 		})
 
+		It("ignores topic change-looking messages", func() {
+			msg.Text = "<@U1234567> set the channel topic: something else"
+
+			res, err := subject.ParseMessage(msg)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(res).To(BeNil())
+		})
+
 		Context("direct messages", func() {
 			BeforeEach(func() {
 				msg.Channel = "D1234567"
