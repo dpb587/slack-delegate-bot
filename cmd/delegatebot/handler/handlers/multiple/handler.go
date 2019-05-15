@@ -27,7 +27,7 @@ func (h Handler) IsApplicable(m message.Message) (bool, error) {
 func (h Handler) Execute(m *message.Message) (handler.MessageResponse, error) {
 	response := handler.MessageResponse{}
 
-	// first one finding interrupt wins
+	// first one matching wins
 	for _, hh := range h.Handlers {
 		b, err := hh.IsApplicable(*m)
 		if err != nil {
@@ -36,21 +36,7 @@ func (h Handler) Execute(m *message.Message) (handler.MessageResponse, error) {
 			continue
 		}
 
-		r, err := hh.Execute(m)
-		if err != nil {
-			return handler.MessageResponse{}, err
-		}
-
-		if len(r.Delegates) > 0 {
-			response.Delegates = r.Delegates
-
-			// if interrupts are found, return immediately
-			return response, nil
-		}
-
-		if response.EmptyMessage == "" && r.EmptyMessage != "" {
-			response.EmptyMessage = r.EmptyMessage
-		}
+		return hh.Execute(m)
 	}
 
 	return response, nil

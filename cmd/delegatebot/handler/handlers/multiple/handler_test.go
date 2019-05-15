@@ -74,7 +74,7 @@ var _ = Describe("Handler", func() {
 			})
 		})
 
-		Context("subhandler has delegates", func() {
+		Context("subhandler has no delegates", func() {
 			BeforeEach(func() {
 				firstHandler.IsApplicableReturns(true, nil)
 				firstHandler.ExecuteReturns(
@@ -84,6 +84,7 @@ var _ = Describe("Handler", func() {
 					nil,
 				)
 			})
+
 			It("configures empty message", func() {
 				res, err := subject.Execute(&msg)
 				Expect(err).NotTo(HaveOccurred())
