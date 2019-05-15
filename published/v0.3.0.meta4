@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metalink xmlns="urn:ietf:params:xml:ns:metalink">
+  <file name="delegatebot-0.3.0-darwin-amd64">
+    <hash type="md5">22cce6a8c2cffdba728c3827a7fe7c0b</hash>
+    <hash type="sha-1">06662fc827dcdc62a128936056dfcdb54ea429b5</hash>
+    <hash type="sha-256">95cd3cd815176ad12e7166f9f188c550f47d9f0f95dfebcd978d10aa4bd90218</hash>
+    <hash type="sha-512">9a2b12cb05c5066918a8f47fdc6f284dd16dc504476ca18df5d81282d110b5f32802c783666ae78fb1610309727472822ca57d8b54543466f5968b73c8fbd067</hash>
+    <size>11142296</size>
+    <url>https://github.com/dpb587/slack-delegate-bot/releases/download/v0.3.0/delegatebot-0.3.0-darwin-amd64</url>
+    <version>0.3.0</version>
+  </file>
+  <file name="delegatebot-0.3.0-linux-amd64">
+    <hash type="md5">26330a74c39bb3bd614f4daca3c7f328</hash>
+    <hash type="sha-1">98e68601c7dbefa7bdaf5d09e58cc914b82567de</hash>
+    <hash type="sha-256">4ff9537eb629e8855811f640163f411ab64728c3f7b1dad790e746af7d2a4611</hash>
+    <hash type="sha-512">256408f13875038be6543ec4e5454629751cf4ab0ab1d72889e0f0202c1b77b61b1b03d79a33b04f1ff831889d563822c3cfcec4d9515b32d712494552ef5573</hash>
+    <size>11119227</size>
+    <url>https://github.com/dpb587/slack-delegate-bot/releases/download/v0.3.0/delegatebot-0.3.0-linux-amd64</url>
+    <version>0.3.0</version>
+  </file>
+  <file name="delegatebot-0.3.0-windows-amd64.exe">
+    <hash type="md5">9baf949da98e38b3b163390e98c28090</hash>
+    <hash type="sha-1">a5caf8caa963d1cd51d509eeebd2ac0e820eb061</hash>
+    <hash type="sha-256">f6712f9ee3e1e0c16b21bdb11bfefc6383e44a97ec0dcfaf87c6d4c00799f7b2</hash>
+    <hash type="sha-512">d53956459d7d5c8724febdda47cfe5ca3bab1c08c7edeccbc4bfb66da986cd82a83126ee7f8866252623123ddd2a83b39561771dfbcda5bfd98f1ea0915117ed</hash>
+    <size>10859008</size>
+    <url>https://github.com/dpb587/slack-delegate-bot/releases/download/v0.3.0/delegatebot-0.3.0-windows-amd64.exe</url>
+    <version>0.3.0</version>
+  </file>
+  <generator>metalink.dpb587.github.io/0.0.0</generator>
+</metalink>
