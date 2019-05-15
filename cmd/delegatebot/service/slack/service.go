@@ -1,6 +1,8 @@
 package slack
 
 import (
+	"time"
+
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/handler"
 	"github.com/nlopes/slack"
 	"github.com/pkg/errors"
@@ -39,7 +41,7 @@ func (s *Service) Run() error {
 			case *slack.ConnectedEvent:
 				s.messageParser = NewMessageParser(ev.Info.User)
 
-				s.logger.Infof("connected: %#+v\n", ev.Info.User)
+				s.logger.Infof("connected as %s (%s)", ev.Info.User.Name, ev.Info.User.ID)
 			case *slack.MessageEvent:
 				if s.messageParser == nil {
 					// we assign messageParser only after we're connected
@@ -57,7 +59,13 @@ func (s *Service) Run() error {
 					continue
 				}
 
-				s.logger.Debugf("received message: %#+v", incoming)
+				s.logger.WithFields(logrus.Fields{
+					"recv.origin":           incoming.Origin,
+					"recv.origin_type":      incoming.OriginType,
+					"recv.interrupt_target": incoming.InterruptTarget,
+					"recv.text":             incoming.Text,
+					"recv.timestamp":        incoming.Timestamp.Format(time.RFC3339),
+				}).Debug("received message")
 
 				outgoing, err := s.messageHandler.GetResponse(*incoming, ev)
 				if err != nil {
@@ -67,6 +75,12 @@ func (s *Service) Run() error {
 				} else if outgoing == nil {
 					continue
 				}
+
+				s.logger.WithFields(logrus.Fields{
+					"send.channel":          outgoing.Channel,
+					"send.text":             outgoing.Text,
+					"send.thread_timestamp": outgoing.ThreadTimestamp,
+				}).Debug("sending message")
 
 				s.rtm.SendMessage(outgoing)
 			case *slack.RTMError:
