@@ -2,8 +2,6 @@
 
 A bot for pulling others into a conversation.
 
-For [cloudfoundry.slack.com](https://slack.cloudfoundry.org/), the bot is configured in [`app/cloudfoundry/config`](app/cloudfoundry/config) and deployed to [Pivotal Web Services](https://run.pivotal.io/). Want to use it in that workspace? Send a pull request or discuss in an issue.
-
 
 ## Usage
 
