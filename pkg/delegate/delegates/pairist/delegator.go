@@ -3,26 +3,39 @@ package pairist
 import (
 	"github.com/dpb587/go-pairist/api"
 	"github.com/dpb587/go-pairist/denormalized"
-	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
+	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
 )
 
 type Delegator struct {
+	Client api.Client
+
 	Team string
-	Role string
+
+	Role  string
+	Track string
 }
 
 var _ delegate.Delegator = &Delegator{}
 
 func (i Delegator) Delegate(_ message.Message) ([]delegate.Delegate, error) {
-	curr, err := api.DefaultClient.GetTeamCurrent(i.Team)
+	curr, err := i.Client.GetTeamCurrent(i.Team)
 	if err != nil {
 		return nil, err
 	}
 
+	allLanes := denormalized.BuildLanes(curr)
+	var lanes denormalized.Lanes
+
+	if i.Track != "" {
+		lanes = allLanes.ByTrack(i.Track)
+	} else {
+		lanes = allLanes.ByRole(i.Role)
+	}
+
 	var res []delegate.Delegate
 
-	for _, lane := range denormalized.BuildLanes(curr).ByRole(i.Role) {
+	for _, lane := range lanes {
 		for _, person := range lane.People {
 			res = append(res, delegate.Literal{Text: person.Name})
 		}
