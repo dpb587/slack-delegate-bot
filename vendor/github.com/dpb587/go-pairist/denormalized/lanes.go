@@ -1,8 +1,12 @@
 package denormalized
 
-import (
-	"github.com/dpb587/go-pairist/api"
-)
+type Entity struct {
+	Color     string
+	Icon      string
+	Name      string
+	Picture   string
+	UpdatedAt uint
+}
 
 type Lane struct {
 	ID     string
@@ -13,7 +17,7 @@ type Lane struct {
 
 type Lanes []Lane
 
-func (l Lanes) ByRole(name string) []Lane {
+func (l Lanes) ByRole(name string) Lanes {
 	var res []Lane
 
 	for _, r := range l {
@@ -29,45 +33,18 @@ func (l Lanes) ByRole(name string) []Lane {
 	return res
 }
 
-type Entity struct {
-	Color     string
-	Icon      string
-	Name      string
-	Picture   string
-	UpdatedAt uint
-}
+func (l Lanes) ByTrack(name string) Lanes {
+	var res []Lane
 
-func BuildLanes(historical *api.TeamHistorical) Lanes {
-	var lanes Lanes
+	for _, r := range l {
+		for _, b := range r.Tracks {
+			if b.Name == name {
+				res = append(res, r)
 
-	for laneID := range historical.Lanes {
-		lane := Lane{}
-
-		for _, entity := range historical.Entities {
-			if entity.Location != laneID {
-				continue
-			}
-
-			denormalizedEntity := Entity{
-				Color:     entity.Color,
-				Icon:      entity.Icon,
-				Name:      entity.Name,
-				Picture:   entity.Picture,
-				UpdatedAt: entity.UpdatedAt,
-			}
-
-			switch entity.Type {
-			case "person":
-				lane.People = append(lane.People, denormalizedEntity)
-			case "role":
-				lane.Roles = append(lane.Roles, denormalizedEntity)
-			case "track":
-				lane.Tracks = append(lane.Tracks, denormalizedEntity)
+				break
 			}
 		}
-
-		lanes = append(lanes, lane)
 	}
 
-	return lanes
+	return res
 }

@@ -1,9 +1,5 @@
 package api
 
-import (
-	"fmt"
-)
-
 type TeamHistorical struct {
 	Entities map[string]TeamHistoricalEntity `json:"entities,omitempty"`
 	Lanes    map[string]TeamHistoricalLane   `json:"lanes,omitempty"`
@@ -23,15 +19,4 @@ type TeamHistoricalEntity struct {
 type TeamHistoricalLane struct {
 	Locked    bool `json:"locked,omitempty"`
 	SortOrder uint `json:"sortOrder,omitempty"`
-}
-
-func (c *Client) GetTeamCurrent(team string) (*TeamHistorical, error) {
-	var res TeamHistorical
-
-	err := c.Get(fmt.Sprintf("teams/%s/current.json", team), &res)
-	if err != nil {
-		return nil, err
-	}
-
-	return &res, nil
 }
