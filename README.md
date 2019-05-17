@@ -156,7 +156,9 @@ Refer to a team's [pairist](https://pair.ist/) to find people with a particular 
 ```yaml
 pairist:
   team: bosh-director
+  # password: literal # OR $PAIRIST_TEAM_x
   role: Interrupt
+  # track: Community
 ```
 
 
