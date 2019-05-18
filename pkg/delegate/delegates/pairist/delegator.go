@@ -8,7 +8,7 @@ import (
 )
 
 type Delegator struct {
-	Client api.Client
+	Client *api.Client
 
 	Team string
 

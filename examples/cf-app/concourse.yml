@@ -30,6 +30,9 @@ jobs:
           # required when running the bot for user timezone configuration
           apk add --no-cache tzdata
 
+          # avoids google default credentials error during validation
+          export PAIRIST_API_KEY=fake-token
+
           cp slack-delegate-bot/* app/exec
           echo 'exec ./exec --config=config/*.yml --config=config/default.delegatebot ${COMMAND:-run}' > app/run.sh
           chmod +x app/*
