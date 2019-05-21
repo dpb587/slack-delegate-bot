@@ -169,7 +169,7 @@ List multiple interrupts and all discovered interrupts will be suggested.
 ```yaml
 union:
 - user: { id: U12345678 }
-- usergroup: { id: S23456789 }
+- usergroup: { id: S23456789, alias: "slackgroupname" }
 ```
 
 
@@ -187,7 +187,7 @@ user: { id: U12345678 }
 Interrupt a specific user group.
 
 ```yaml
-usergroup: { id: S12345678 }
+usergroup: { id: S12345678, alias: "slackgroupname" }
 ```
 
 
