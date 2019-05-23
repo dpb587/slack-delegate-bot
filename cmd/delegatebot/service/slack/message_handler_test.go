@@ -80,6 +80,17 @@ var _ = Describe("MessageHandler", func() {
 				Expect(res.ThreadTimestamp).To(Equal("fake-timestamp"))
 				Expect(res.Text).To(Equal("^ something completely different"))
 			})
+
+			It("responds to existing threads", func() {
+				ev.Msg.ThreadTimestamp = "fake-earlier-timestamp"
+
+				res, err := subject.GetResponse(msg, ev)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(res).ToNot(BeNil())
+				Expect(res.Channel).To(Equal("C1234567"))
+				Expect(res.ThreadTimestamp).To(Equal("fake-earlier-timestamp"))
+				Expect(res.Text).To(Equal("^ something completely different"))
+			})
 		})
 
 		Context("no delegates", func() {

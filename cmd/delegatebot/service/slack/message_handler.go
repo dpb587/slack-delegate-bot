@@ -50,7 +50,13 @@ func (h *MessageHandler) GetResponse(request message.Message, ev *slack.MessageE
 	outgoing := h.rtm.NewOutgoingMessage(msg, ev.Msg.Channel)
 
 	if request.OriginType == message.ChannelOriginType {
-		outgoing.ThreadTimestamp = ev.Msg.Timestamp
+		if ev.Msg.ThreadTimestamp != "" {
+			// already part of a thread; use it
+			outgoing.ThreadTimestamp = ev.Msg.ThreadTimestamp
+		} else {
+			// start a new thread
+			outgoing.ThreadTimestamp = ev.Msg.Timestamp
+		}
 	}
 
 	return outgoing, nil
