@@ -10,15 +10,23 @@
   version = "v0.39.0"
 
 [[projects]]
+  digest = "1:76dc72490af7174349349838f2fe118996381b31ea83243812a97e5a0fd5ed55"
+  name = "github.com/dgrijalva/jwt-go"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
+
+[[projects]]
   branch = "master"
-  digest = "1:c998a55ea6ff696bb1f086737e3b64e812adbbdb542a70d568c5aee1b18f8ace"
+  digest = "1:505204db1adc711ade1e57662b45a1820b8eeeb06fe35734444a414c4b547fdb"
   name = "github.com/dpb587/go-pairist"
   packages = [
     "api",
     "denormalized",
   ]
   pruneopts = "UT"
-  revision = "b1b5f3280d17f25eff1fdbf002864006491f166c"
+  revision = "0afb32e8960536392885e50ed046e7517bed4c78"
 
 [[projects]]
   digest = "1:239c4c7fd2159585454003d9be7207167970194216193a8a210b8d29576f19c9"

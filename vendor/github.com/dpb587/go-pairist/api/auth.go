@@ -2,12 +2,10 @@ package api
 
 import (
 	"context"
-	"encoding/base64"
-	"encoding/json"
 	"fmt"
-	"strings"
 	"time"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
 	identitytoolkit "google.golang.org/api/identitytoolkit/v3"
 	"google.golang.org/api/option"
@@ -42,26 +40,15 @@ func (a *Auth) IDToken() (string, error) {
 
 		a.idToken = resp.IdToken
 
-		idTokenSplit := strings.SplitN(a.idToken, ".", 3)
-		if len(idTokenSplit) != 3 {
-			return "", fmt.Errorf("parsing auth token: expected 3 parts, found %d", len(idTokenSplit))
-		}
+		var claims jwt.StandardClaims
+		parser := &jwt.Parser{}
 
-		claimsData, err := base64.StdEncoding.DecodeString(idTokenSplit[1])
+		_, _, err = parser.ParseUnverified(a.idToken, &claims)
 		if err != nil {
-			return "", errors.Wrap(err, "decoding auth token")
+			return "", errors.Wrap(err, "parsing auth token")
 		}
 
-		var claims struct {
-			Exp int64 `json:"exp"`
-		}
-
-		err = json.Unmarshal(claimsData, &claims)
-		if err != nil {
-			return "", errors.Wrap(err, "unmarshalling auth token claims")
-		}
-
-		a.refreshAfter = time.Unix(claims.Exp, 0).Add(-5 * time.Minute)
+		a.refreshAfter = time.Unix(claims.ExpiresAt, 0).Add(-5 * time.Minute)
 	}
 
 	return a.idToken, nil
