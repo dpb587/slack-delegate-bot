@@ -4,8 +4,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
+	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
 	"github.com/nlopes/slack"
 	"github.com/pkg/errors"
 )
@@ -24,7 +24,7 @@ var _ delegate.Delegator = &Delegator{}
 
 var slackRefRE = regexp.MustCompile(`<[^>]+>`)
 var topicInterruptREs = []*regexp.Regexp{
-	regexp.MustCompile(`(?i)[*_]*interrupt[*_:]* (<[^>]+>\s*)+`),
+	regexp.MustCompile(`(?i)[*_]*interrupt[*_:]*\s+(<[^>]+>(,?\s+and\s+|,?\s*)?)+`),
 }
 
 func (i Delegator) Delegate(m message.Message) ([]delegate.Delegate, error) {

@@ -3,10 +3,10 @@ package topiclookup_test
 import (
 	"errors"
 
+	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
 	. "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/topiclookup"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/topiclookup/topiclookupfakes"
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
 	"github.com/nlopes/slack"
 
 	. "github.com/onsi/ginkgo"
@@ -49,7 +49,10 @@ var _ = Describe("Delegator", func() {
 		Entry("cf-docs", "Questions? Interrupt <@U0JAEKNBH>. Contribute to the Docs! <http://docs.cloudfoundry.org/concepts/contribute.html>", delegate.User{ID: "U0JAEKNBH"}),
 		Entry("cli", "Question about Apps or the CC API? Try <#C07C04W4Q|capi> first! Interrupt: <!subteam^S1ZAS8DNY|@cli-team> PM: <@U0CPY3BL2> For contributor discussion, please visit <#CDVP0651P|cli-dev-internal>", delegate.UserGroup{ID: "S1ZAS8DNY", Alias: "cli-team"}),
 		Entry("credhub", "Please include your CredHub logs in case of Errors | interrupt: <@U6W2F82B1> <@U8TDZ8VU3> | break glass: `@credhub-team` | PM: <@UDFK4K0KT>, <@UHPMJCXGC>", delegate.User{ID: "U6W2F82B1"}, delegate.User{ID: "U8TDZ8VU3"}),
-
+		Entry("networking", "@Eng Interrupt: <@U12345678> and <@U23456789> | the Networking Program (formerly Container Networking and Routing).  All your packets belong to us.", delegate.User{ID: "U12345678"}, delegate.User{ID: "U23456789"}),
+		Entry("test-commas", "Interrupt: <@U12345678>, <@U23456789>", delegate.User{ID: "U12345678"}, delegate.User{ID: "U23456789"}),
+		Entry("test-commas-and", "Interrupt: <@U12345678>, and <@U23456789>", delegate.User{ID: "U12345678"}, delegate.User{ID: "U23456789"}),
+		Entry("multiple spaces", "Interrupt:  <@U12345678>", delegate.User{ID: "U12345678"}),
 		// extra, surrounding emojis do not match
 		Entry("capi", "Can I push: <http://canibump.cfapps.io|canibump.cfapps.io> Interrupt: :whale: <@U0GQNFF8R> <@U056V1DDK> :boom-avocado:  | PM: <@U91NR3Q3T> :spacewhale2: : | Operators are standing by to take your call 9-6 Pacific"),
 	)
