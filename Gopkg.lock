@@ -11,14 +11,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:194148ef90b4d49ddc3c1bed3c45d0e9228cce2d2c08637e5e59c9b44f0c80f4"
+  digest = "1:c998a55ea6ff696bb1f086737e3b64e812adbbdb542a70d568c5aee1b18f8ace"
   name = "github.com/dpb587/go-pairist"
   packages = [
     "api",
     "denormalized",
   ]
   pruneopts = "UT"
-  revision = "0a28d1b9e7876087fb8ebcd01185378bf6a829e1"
+  revision = "b1b5f3280d17f25eff1fdbf002864006491f166c"
 
 [[projects]]
   digest = "1:239c4c7fd2159585454003d9be7207167970194216193a8a210b8d29576f19c9"
