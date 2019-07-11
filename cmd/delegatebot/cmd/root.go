@@ -6,5 +6,6 @@ type Root struct {
 	*opts.Root
 
 	Run      *RunCmd      `command:"run" description:"For running the bot"`
+	Stats    *StatsCmd    `command:"stats" description:"For generating historical stats"`
 	Validate *ValidateCmd `command:"validate" description:"For validating configuration"`
 }
