@@ -53,6 +53,7 @@ var _ = Describe("Delegator", func() {
 		Entry("test-commas", "Interrupt: <@U12345678>, <@U23456789>", delegate.User{ID: "U12345678"}, delegate.User{ID: "U23456789"}),
 		Entry("test-commas-and", "Interrupt: <@U12345678>, and <@U23456789>", delegate.User{ID: "U12345678"}, delegate.User{ID: "U23456789"}),
 		Entry("multiple spaces", "Interrupt:  <@U12345678>", delegate.User{ID: "U12345678"}),
+		Entry("test-backtick", "`something` else\n`interrupt` <@U12345678> <@U23456789>\n`third` thing)", delegate.User{ID: "U12345678"}, delegate.User{ID: "U23456789"}),
 		// extra, surrounding emojis do not match
 		Entry("capi", "Can I push: <http://canibump.cfapps.io|canibump.cfapps.io> Interrupt: :whale: <@U0GQNFF8R> <@U056V1DDK> :boom-avocado:  | PM: <@U91NR3Q3T> :spacewhale2: : | Operators are standing by to take your call 9-6 Pacific"),
 	)

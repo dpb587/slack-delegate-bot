@@ -24,7 +24,7 @@ var _ delegate.Delegator = &Delegator{}
 
 var slackRefRE = regexp.MustCompile(`<[^>]+>`)
 var topicInterruptREs = []*regexp.Regexp{
-	regexp.MustCompile(`(?i)[*_]*interrupt[*_:]*\s+(<[^>]+>(,?\s+and\s+|,?\s*)?)+`),
+	regexp.MustCompile("(?i)[`*_]*interrupt[`*_:]*\\s+(<[^>]+>(,?\\s+and\\s+|,?\\s*)?)+"),
 }
 
 func (i Delegator) Delegate(m message.Message) ([]delegate.Delegate, error) {
