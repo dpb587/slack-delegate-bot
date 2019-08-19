@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
-	"time"
 
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
 	"github.com/nlopes/slack"
@@ -46,7 +45,7 @@ func (p *MessageParser) ParseMessage(msg slack.Msg) (*message.Message, error) {
 		Origin:          msg.Channel,
 		OriginType:      message.ChannelOriginType,
 		InterruptTarget: msg.Channel,
-		Timestamp:       time.Now(), // TODO
+		Timestamp:       convertSlackTimestamp(msg.Timestamp),
 		Text:            msg.Text,
 	}
 

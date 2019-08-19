@@ -1,6 +1,9 @@
 package slack_test
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
 	. "github.com/dpb587/slack-delegate-bot/cmd/delegatebot/service/slack"
 	"github.com/nlopes/slack"
@@ -18,9 +21,10 @@ var _ = Describe("MessageParser", func() {
 			ID: "U1234567",
 		})
 		msg = slack.Msg{
-			Channel: "C1234567",
-			Type:    "message",
-			Text:    "help me, <@U1234567> you're my only hope.",
+			Channel:   "C1234567",
+			Type:      "message",
+			Text:      "help me, <@U1234567> you're my only hope.",
+			Timestamp: fmt.Sprintf("%d.0", time.Now().Unix()),
 		}
 	})
 

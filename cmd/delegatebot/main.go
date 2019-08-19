@@ -18,6 +18,9 @@ func main() {
 		Validate: &cmd.ValidateCmd{
 			Root: opts,
 		},
+		Simulate: &cmd.SimulateCmd{
+			Root: opts,
+		},
 	}
 
 	var parser = flags.NewParser(&main, flags.Default)
