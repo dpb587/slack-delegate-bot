@@ -28,13 +28,13 @@ jobs:
           set -eu
 
           # required when running the bot for user timezone configuration
-          apk add --no-cache tzdata
+          apk add --no-progress --no-cache tzdata
 
           # avoids google default credentials error during validation
           export PAIRIST_API_KEY=fake-token
 
-          cp slack-delegate-bot/* app/exec
-          echo 'exec ./exec --config=config/*.yml --config=config/default.delegatebot ${COMMAND:-run}' > app/run.sh
+          cp slack-delegate-bot/* app/slack-delegate-bot
+          echo 'exec ./slack-delegate-bot --config=config/*.yml --config=config/default.delegatebot ${COMMAND:-run}' > app/exec
           chmod +x app/*
 
           cat > app/cf.yml <<EOF
@@ -42,7 +42,8 @@ jobs:
           - name: ((app_name))
             memory: 32M
             instances: 1
-            buildpack: https://github.com/shageman/buildpack-binary
+            buildpack: https://github.com/cloudfoundry/binary-buildpack
+            command: ./exec
             env:
               SLACK_TOKEN: ((slack_token))
             no-route: true
@@ -52,7 +53,7 @@ jobs:
 
           cd app
 
-          COMMAND=validate ./run.sh
+          COMMAND=validate ./exec
   - put: cf
     params:
       manifest: app/cf.yml
