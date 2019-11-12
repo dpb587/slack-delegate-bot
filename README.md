@@ -83,7 +83,7 @@ delegatebot:
 Delegators are configured to lookup someone who can be contacted.
 
 
-##### `channeltopic`
+##### `topiclookup`
 
 Refer to a channel's topic to try and identify the interrupts. The following conventions are matched:
 
@@ -91,8 +91,8 @@ Refer to a channel's topic to try and identify the interrupts. The following con
  * `interrupt <@n>...`
 
 ```yaml
-channeltopic:
-  id: C12345678
+topiclookup:
+  channel: C12345678
 ```
 
 
