@@ -149,6 +149,18 @@ literalmap:
 ```
 
 
+##### `pagerduty`
+
+Refer to a PagerDuty escalation policy to find current on-call users. By default, only the first escalation level is used.
+
+```yaml
+pagerduty:
+  api_key: # literal or $PAGERDUTY_TEAM_x
+  escalation_policy: PZI9P8E
+  # escalation_level: 0 # to show all users, or a specific level number
+```
+
+
 ##### `pairist`
 
 Refer to a team's [pairist](https://pair.ist/) to find people with a particular role.

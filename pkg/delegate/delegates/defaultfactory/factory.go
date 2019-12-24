@@ -10,6 +10,7 @@ import (
 	conditionalfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/conditional/factory"
 	literalfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/literal/factory"
 	literalmapfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/literalmap/factory"
+	pagerdutyfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/pagerduty/factory"
 	pairistfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/pairist/factory"
 	topiclookupfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/topiclookup/factory"
 	unionfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/union/factory"
@@ -33,6 +34,7 @@ func New(conditionsFactory conditions.Factory, slackAPI *slack.Client) delegates
 	f.factory["if"] = conditionalfactory.New(f, conditionsFactory)
 	f.factory["literal"] = literalfactory.New()
 	f.factory["literalmap"] = literalmapfactory.New(f)
+	f.factory["pagerduty"] = pagerdutyfactory.New()
 	f.factory["pairist"] = pairistfactory.New()
 	f.factory["topiclookup"] = topiclookupfactory.New(slackAPI)
 	f.factory["union"] = unionfactory.New(f)
