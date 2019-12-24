@@ -52,14 +52,14 @@ func (f factory) Create(name string, options interface{}) (delegate.Delegator, e
 		}
 
 		clientAuth = &api.Auth{
-			APIKey:   os.Getenv("PAIRIST_API_KEY"),
+			APIKey:   api.DefaultFirebaseAPIKey,
 			Team:     parsed.Team,
 			Password: parsed.Password,
 		}
 	}
 
 	return &pairist.Delegator{
-		Client: api.NewClient(http.DefaultClient, api.DefaultDatabaseURL, clientAuth),
+		Client: api.NewClient(http.DefaultClient, api.DefaultFirebaseURL, clientAuth),
 		Team:   parsed.Team,
 		Role:   parsed.Role,
 		Track:  parsed.Track,
