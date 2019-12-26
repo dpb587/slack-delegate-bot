@@ -8,6 +8,7 @@ import (
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates"
 	coalescefactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/coalesce/factory"
 	conditionalfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/conditional/factory"
+	emaillookupmapfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/emaillookupmap/factory"
 	literalfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/literal/factory"
 	literalmapfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/literalmap/factory"
 	pagerdutyfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/pagerduty/factory"
@@ -31,6 +32,7 @@ func New(conditionsFactory conditions.Factory, slackAPI *slack.Client) delegates
 	}
 
 	f.factory["coalesce"] = coalescefactory.New(f)
+	f.factory["emaillookupmap"] = emaillookupmapfactory.New(f, slackAPI)
 	f.factory["if"] = conditionalfactory.New(f, conditionsFactory)
 	f.factory["literal"] = literalfactory.New()
 	f.factory["literalmap"] = literalmapfactory.New(f)

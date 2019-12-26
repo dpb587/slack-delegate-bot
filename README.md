@@ -128,6 +128,16 @@ if:
 ```
 
 
+##### `emaillookupmap`
+
+Attempt to map email addresses to Slack users.
+
+```yaml
+emaillookupmap:
+  from: { pagerduty: { api_key: $PAGERDUTY_API_KEY, escalation_policy: PZI9P8E } }
+```
+
+
 ##### `literal`
 
 Instead of a user or user group, mention an interrupt with literal text.
