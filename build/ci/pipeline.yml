@@ -13,7 +13,7 @@ jobs:
         type: docker-image
         source:
           repository: golang
-          tag: "1.11"
+          tag: "1.13"
       inputs:
       - name: repo
         path: src/github.com/dpb587/slack-delegate-bot
