@@ -12,7 +12,7 @@ import (
 
 //go:generate counterfeiter . SlackAPI
 type SlackAPI interface {
-	GetChannelInfo(string) (*slack.Channel, error)
+	GetConversationInfo(string, bool) (*slack.Channel, error)
 }
 
 type Delegator struct {
@@ -33,7 +33,7 @@ func (i Delegator) Delegate(m message.Message) ([]delegate.Delegate, error) {
 		channel = i.Channel
 	}
 
-	info, err := i.API.GetChannelInfo(channel)
+	info, err := i.API.GetConversationInfo(channel, false)
 	if err != nil {
 		return nil, errors.Wrapf(err, "getting info of channel %s", channel)
 	}

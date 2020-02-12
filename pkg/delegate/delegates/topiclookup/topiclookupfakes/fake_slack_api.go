@@ -9,16 +9,17 @@ import (
 )
 
 type FakeSlackAPI struct {
-	GetChannelInfoStub        func(string) (*slack.Channel, error)
-	getChannelInfoMutex       sync.RWMutex
-	getChannelInfoArgsForCall []struct {
+	GetConversationInfoStub        func(string, bool) (*slack.Channel, error)
+	getConversationInfoMutex       sync.RWMutex
+	getConversationInfoArgsForCall []struct {
 		arg1 string
+		arg2 bool
 	}
-	getChannelInfoReturns struct {
+	getConversationInfoReturns struct {
 		result1 *slack.Channel
 		result2 error
 	}
-	getChannelInfoReturnsOnCall map[int]struct {
+	getConversationInfoReturnsOnCall map[int]struct {
 		result1 *slack.Channel
 		result2 error
 	}
@@ -26,52 +27,65 @@ type FakeSlackAPI struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeSlackAPI) GetChannelInfo(arg1 string) (*slack.Channel, error) {
-	fake.getChannelInfoMutex.Lock()
-	ret, specificReturn := fake.getChannelInfoReturnsOnCall[len(fake.getChannelInfoArgsForCall)]
-	fake.getChannelInfoArgsForCall = append(fake.getChannelInfoArgsForCall, struct {
+func (fake *FakeSlackAPI) GetConversationInfo(arg1 string, arg2 bool) (*slack.Channel, error) {
+	fake.getConversationInfoMutex.Lock()
+	ret, specificReturn := fake.getConversationInfoReturnsOnCall[len(fake.getConversationInfoArgsForCall)]
+	fake.getConversationInfoArgsForCall = append(fake.getConversationInfoArgsForCall, struct {
 		arg1 string
-	}{arg1})
-	fake.recordInvocation("GetChannelInfo", []interface{}{arg1})
-	fake.getChannelInfoMutex.Unlock()
-	if fake.GetChannelInfoStub != nil {
-		return fake.GetChannelInfoStub(arg1)
+		arg2 bool
+	}{arg1, arg2})
+	fake.recordInvocation("GetConversationInfo", []interface{}{arg1, arg2})
+	fake.getConversationInfoMutex.Unlock()
+	if fake.GetConversationInfoStub != nil {
+		return fake.GetConversationInfoStub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.getChannelInfoReturns.result1, fake.getChannelInfoReturns.result2
+	fakeReturns := fake.getConversationInfoReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
-func (fake *FakeSlackAPI) GetChannelInfoCallCount() int {
-	fake.getChannelInfoMutex.RLock()
-	defer fake.getChannelInfoMutex.RUnlock()
-	return len(fake.getChannelInfoArgsForCall)
+func (fake *FakeSlackAPI) GetConversationInfoCallCount() int {
+	fake.getConversationInfoMutex.RLock()
+	defer fake.getConversationInfoMutex.RUnlock()
+	return len(fake.getConversationInfoArgsForCall)
 }
 
-func (fake *FakeSlackAPI) GetChannelInfoArgsForCall(i int) string {
-	fake.getChannelInfoMutex.RLock()
-	defer fake.getChannelInfoMutex.RUnlock()
-	return fake.getChannelInfoArgsForCall[i].arg1
+func (fake *FakeSlackAPI) GetConversationInfoCalls(stub func(string, bool) (*slack.Channel, error)) {
+	fake.getConversationInfoMutex.Lock()
+	defer fake.getConversationInfoMutex.Unlock()
+	fake.GetConversationInfoStub = stub
 }
 
-func (fake *FakeSlackAPI) GetChannelInfoReturns(result1 *slack.Channel, result2 error) {
-	fake.GetChannelInfoStub = nil
-	fake.getChannelInfoReturns = struct {
+func (fake *FakeSlackAPI) GetConversationInfoArgsForCall(i int) (string, bool) {
+	fake.getConversationInfoMutex.RLock()
+	defer fake.getConversationInfoMutex.RUnlock()
+	argsForCall := fake.getConversationInfoArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeSlackAPI) GetConversationInfoReturns(result1 *slack.Channel, result2 error) {
+	fake.getConversationInfoMutex.Lock()
+	defer fake.getConversationInfoMutex.Unlock()
+	fake.GetConversationInfoStub = nil
+	fake.getConversationInfoReturns = struct {
 		result1 *slack.Channel
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeSlackAPI) GetChannelInfoReturnsOnCall(i int, result1 *slack.Channel, result2 error) {
-	fake.GetChannelInfoStub = nil
-	if fake.getChannelInfoReturnsOnCall == nil {
-		fake.getChannelInfoReturnsOnCall = make(map[int]struct {
+func (fake *FakeSlackAPI) GetConversationInfoReturnsOnCall(i int, result1 *slack.Channel, result2 error) {
+	fake.getConversationInfoMutex.Lock()
+	defer fake.getConversationInfoMutex.Unlock()
+	fake.GetConversationInfoStub = nil
+	if fake.getConversationInfoReturnsOnCall == nil {
+		fake.getConversationInfoReturnsOnCall = make(map[int]struct {
 			result1 *slack.Channel
 			result2 error
 		})
 	}
-	fake.getChannelInfoReturnsOnCall[i] = struct {
+	fake.getConversationInfoReturnsOnCall[i] = struct {
 		result1 *slack.Channel
 		result2 error
 	}{result1, result2}
@@ -80,9 +94,13 @@ func (fake *FakeSlackAPI) GetChannelInfoReturnsOnCall(i int, result1 *slack.Chan
 func (fake *FakeSlackAPI) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
-	fake.getChannelInfoMutex.RLock()
-	defer fake.getChannelInfoMutex.RUnlock()
-	return fake.invocations
+	fake.getConversationInfoMutex.RLock()
+	defer fake.getConversationInfoMutex.RUnlock()
+	copiedInvocations := map[string][][]interface{}{}
+	for key, value := range fake.invocations {
+		copiedInvocations[key] = value
+	}
+	return copiedInvocations
 }
 
 func (fake *FakeSlackAPI) recordInvocation(key string, args []interface{}) {

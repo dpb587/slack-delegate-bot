@@ -35,13 +35,13 @@ var _ = Describe("Delegator", func() {
 				Value: topic,
 			}
 
-			fakeSlackAPI.GetChannelInfoReturns(channelInfo, nil)
+			fakeSlackAPI.GetConversationInfoReturns(channelInfo, nil)
 
 			actual, err := subject.Delegate(msg)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(actual).To(ConsistOf(expected))
 
-			Expect(fakeSlackAPI.GetChannelInfoArgsForCall(0)).To(Equal("C12345678"))
+			Expect(fakeSlackAPI.GetConversationInfoArgsForCall(0)).To(Equal("C12345678"))
 		},
 		Entry("bbl-users", ":bbl: *interrupt:* <!subteam^S7E4C41HS|@infrastructureteam> note:* bbl _always_ works", delegate.UserGroup{ID: "S7E4C41HS", Alias: "infrastructureteam"}),
 		Entry("bbr", "BOSH Backup &amp; Restore | interrupt: <@U08J13EG0> <@UCKK7PZKK> :party_gopher: For PCF/customer specific questions, please ask in the #pcf-backup-restore channel in Pivotal Slack.", delegate.User{ID: "U08J13EG0"}, delegate.User{ID: "UCKK7PZKK"}),
@@ -60,7 +60,7 @@ var _ = Describe("Delegator", func() {
 
 	Context("slack errors", func() {
 		BeforeEach(func() {
-			fakeSlackAPI.GetChannelInfoReturns(nil, errors.New("fake-err1"))
+			fakeSlackAPI.GetConversationInfoReturns(nil, errors.New("fake-err1"))
 		})
 
 		It("errors", func() {
