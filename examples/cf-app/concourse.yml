@@ -3,7 +3,7 @@ jobs:
 - name: deploy
   serial: true
   plan:
-  - aggregate:
+  - in_parallel:
     - get: slack-delegate-bot
       trigger: true
     - get: config

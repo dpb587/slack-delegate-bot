@@ -316,7 +316,7 @@ $ go run ./cmd/delegatebot \
 
 ### Deployment
 
-See [`app/cloudfoundry`](app/cloudfoundry) for an example.
+See [`examples/cf-app`](examples/cf-app) for an example.
 
 
 ## License
