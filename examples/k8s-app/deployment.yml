@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slack-delegate-bot
+  labels:
+    app: delegatebot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: delegatebot
+  template:
+    metadata:
+      labels:
+        app: delegatebot
+    spec:
+      containers:
+        - name: delegatebot
+          image: docker.pkg.github.com/dpb587/slack-delegate-bot/slack-delegate-bot:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - "/usr/local/bin/slack-delegate-bot"
+            - "--config=/config/*.yml"
+            - "--config=/config/default.delegatebot"
+            - "run"
+          livenessProbe:
+            httpGet:
+              path: "/ping"
+              port: 8080
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: "/ping"
+              port: 8080
+          envFrom:
+            - secretRef:
+                name: slack-delegate-bot-env
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      volumes:
+        - name: config
+          configMap:
+            name: slack-delegate-bot-config
