@@ -1,0 +1,41 @@
+before:
+  hooks:
+    - go mod download
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+    dir: ./cmd/delegatebot
+
+dockers:
+  - image_templates:
+      - docker.pkg.github.com/dpb587/slack-delegate-bot/slack-delegate-bot:{{ .Tag }}
+      - docker.pkg.github.com/dpb587/slack-delegate-bot/slack-delegate-bot:v{{ .Major }}
+      - docker.pkg.github.com/dpb587/slack-delegate-bot/slack-delegate-bot:v{{ .Major }}.{{ .Minor }}
+      - docker.pkg.github.com/dpb587/slack-delegate-bot/slack-delegate-bot:latest
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{ .Date }}"
+      - "--label=org.opencontainers.image.name={{ .ProjectName }}"
+      - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
+      - "--label=org.opencontainers.image.version={{ .Version }}"
+
+archives:
+  - id: zip
+    format: zip
+    name_template: "{{ .ProjectName }}-{{ .Os }}"
+    replacements:
+      darwin: macos
+      amd64: x86_64
+
+checksum:
+  name_template: "{{ .ProjectName }}_checksums.txt"
+
+snapshot:
+  name_template: "{{ .Tag }}-next"
