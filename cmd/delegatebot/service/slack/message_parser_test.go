@@ -69,6 +69,21 @@ var _ = Describe("MessageParser", func() {
 			Expect(res).To(BeNil())
 		})
 
+		It("parses attachment fallback", func() {
+			msg.Attachments = []slack.Attachment{
+				{
+					Fallback: msg.Text,
+				},
+			}
+
+			msg.Text = "something else entirely"
+
+			res, err := subject.ParseMessage(msg)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(res).ToNot(BeNil())
+			Expect(res.Text).To(Equal("something else entirely\n\n---\n\nhelp me, <@U1234567> you're my only hope."))
+		})
+
 		Context("direct messages", func() {
 			BeforeEach(func() {
 				msg.Channel = "D1234567"

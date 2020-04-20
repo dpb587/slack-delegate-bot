@@ -49,8 +49,17 @@ func (p *MessageParser) ParseMessage(msg slack.Msg) (*message.Message, error) {
 		Text:            msg.Text,
 	}
 
+	// include attachments
+	for _, attachment := range msg.Attachments {
+		if attachment.Fallback == "" {
+			continue
+		}
+
+		incoming.Text = fmt.Sprintf("%s\n\n---\n\n%s", incoming.Text, attachment.Fallback)
+	}
+
 	if msg.Channel[0] == 'D' { // TODO better way to detect if this is our bot DM?
-		matches := reChannelMention.FindStringSubmatch(msg.Text)
+		matches := reChannelMention.FindStringSubmatch(incoming.Text)
 		if len(matches) > 0 {
 			incoming.InterruptTarget = matches[1]
 		}
@@ -58,11 +67,11 @@ func (p *MessageParser) ParseMessage(msg slack.Msg) (*message.Message, error) {
 		incoming.OriginType = message.DirectMessageOriginType
 
 		return incoming, nil
-	} else if !p.reMention.MatchString(msg.Text) {
+	} else if !p.reMention.MatchString(incoming.Text) {
 		return nil, nil
 	}
 
-	matches := p.reChannelMention.FindStringSubmatch(msg.Text)
+	matches := p.reChannelMention.FindStringSubmatch(incoming.Text)
 	if len(matches) > 0 {
 		incoming.InterruptTarget = matches[1]
 	}
