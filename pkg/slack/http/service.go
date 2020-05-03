@@ -7,7 +7,7 @@ import (
 )
 
 type Service struct {
-	Messenger     *slack.Messenger
+	Processor     slack.Processor
 	SigningSecret string
 }
 
@@ -18,7 +18,7 @@ func (s *Service) InstallService(e *echo.Echo) {
 
 	{
 		r := r.Group("/event")
-		h := NewEventHandler(s.Messenger, s.SigningSecret)
+		h := NewEventHandler(s.Processor, s.SigningSecret)
 
 		r.POST("", h.Accept)
 	}

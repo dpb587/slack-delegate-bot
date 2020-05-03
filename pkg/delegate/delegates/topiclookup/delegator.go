@@ -29,6 +29,11 @@ var topicInterruptREs = []*regexp.Regexp{
 func (i Delegator) Delegate(m message.Message) ([]delegate.Delegate, error) {
 	channel := m.InterruptTarget
 
+	if v := i.Channel; v != "" {
+		// explicit channel reference takes precedence
+		channel = v
+	}
+
 	api, ok := m.ServiceAPI.(SlackAPI)
 	if !ok {
 		return nil, nil

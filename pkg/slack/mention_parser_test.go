@@ -14,8 +14,18 @@ var _ = Describe("MentionParser", func() {
 		It("parses channels", func() {
 			msg := ParseMessageForAnyChannelReference(message.Message{
 				InterruptTarget: "C1234567",
-				Text:            "hey <#C9876543|star-wars> <@U1234567>, help!",
+				Text:            "tell me about <#C9876543|star-wars>",
 			})
+
+			Expect(msg.InterruptTarget).To(Equal("C9876543"))
+		})
+
+		It("parses unnamed channels", func() {
+			msg := ParseMessageForAnyChannelReference(
+				message.Message{
+					Text: "tell me about <#C9876543>",
+				},
+			)
 
 			Expect(msg.InterruptTarget).To(Equal("C9876543"))
 		})
@@ -40,6 +50,19 @@ var _ = Describe("MentionParser", func() {
 			Entry("next to app user", "U1234567", "C9876543"),
 			Entry("next to random user", "U9876543", "C1234567"),
 		)
+
+		It("parses unnamed channels", func() {
+			msg := ParseMessageForChannelReference(
+				message.Message{
+					Text: "hey <#C9876543> <@U1234567>, help!",
+				},
+				func(in string) bool {
+					return true
+				},
+			)
+
+			Expect(msg.InterruptTarget).To(Equal("C9876543"))
+		})
 	})
 
 	Describe("CheckMessageForMention", func() {

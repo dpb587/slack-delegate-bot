@@ -5,11 +5,9 @@ import (
 	"time"
 
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/opts"
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/service/slack"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates"
 	"github.com/dpb587/slack-delegate-bot/pkg/message"
 	"github.com/pkg/errors"
-	slackapi "github.com/slack-go/slack"
 )
 
 type SimulateCmd struct {
@@ -43,40 +41,30 @@ func (c *SimulateCmd) Execute(_ []string) error {
 		return err
 	}
 
-	parser := slack.NewMessageParser(&slackapi.UserDetails{
-		ID: "U0000000",
-	})
-
-	request, err := parser.ParseMessage(slackapi.Msg{
-		Type:      "message",
-		User:      "test",
-		Channel:   c.Args.Origin,
-		Text:      c.Args.Message,
-		Timestamp: fmt.Sprintf("%d.0", ts.Unix()),
-	})
-	if err != nil {
-		return errors.Wrap(err, "parsing fake message")
+	msg := message.Message{
+		Origin:          "D1234567",
+		OriginType:      message.DirectMessageOriginType,
+		OriginTimestamp: fmt.Sprintf("%d.0", ts.Unix()),
+		OriginUserID:    "U1234567",
+		InterruptTarget: c.Args.Origin,
+		Text:            c.Args.Message,
 	}
 
-	response, err := handler.Execute(request)
+	response, err := handler.Execute(&msg)
 	if err != nil {
 		return errors.Wrap(err, "evaluating a response")
 	}
 
-	var msg string
+	var reply string
 
 	if len(response.Delegates) > 0 {
-		msg = delegates.Join(response.Delegates, " ")
-
-		if request.OriginType == message.ChannelOriginType {
-			msg = fmt.Sprintf("^ %s", msg)
-		}
+		reply = delegates.Join(response.Delegates, " ")
 	} else if response.EmptyMessage != "" {
-		msg = response.EmptyMessage
+		reply = response.EmptyMessage
 	}
 
-	if msg != "" {
-		fmt.Printf("%s\n", msg)
+	if reply != "" {
+		fmt.Printf("%s\n", reply)
 	}
 
 	return nil

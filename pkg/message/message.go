@@ -6,6 +6,7 @@ import (
 
 type OriginType string
 
+// TODO rename to MentionOriginType
 const ChannelOriginType OriginType = "channel"
 const DirectMessageOriginType OriginType = "dm"
 

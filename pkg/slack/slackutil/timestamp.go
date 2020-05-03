@@ -14,5 +14,5 @@ func MustConvertTimestamp(timestamp string) time.Time {
 
 	sec, dec := math.Modf(timeFloat)
 
-	return time.Unix(int64(sec), int64(dec*(1e9)))
+	return time.Unix(int64(sec), int64(dec*(1e9))).In(time.UTC)
 }

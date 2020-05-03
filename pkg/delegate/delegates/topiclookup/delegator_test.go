@@ -21,8 +21,9 @@ var _ = Describe("Delegator", func() {
 
 	BeforeEach(func() {
 		fakeSlackAPI = &topiclookupfakes.FakeSlackAPI{}
+		msg.ServiceAPI = fakeSlackAPI
+
 		subject = Delegator{
-			API:     fakeSlackAPI,
 			Channel: "C12345678",
 		}
 	})

@@ -59,8 +59,13 @@ func (c *APICmd) slackService() zlhttp.Service {
 		panic(err)
 	}
 
+	processor := slack.NewSyncProcessor(
+		slack.NewEventParser(slack.NewUserLookup(api)),
+		slack.NewResponder(api, h),
+	)
+
 	return &slackhttp.Service{
-		Messenger:     slack.NewMessenger(api, h),
+		Processor:     processor,
 		SigningSecret: c.SlackSigningSecret,
 	}
 }

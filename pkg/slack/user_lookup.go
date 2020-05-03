@@ -7,21 +7,27 @@ import (
 	"github.com/slack-go/slack"
 )
 
-type Cache struct {
-	api *slack.Client
+//go:generate counterfeiter . UserLookupSlackAPI
+type UserLookupSlackAPI interface {
+	GetUserInfo(string) (*slack.User, error)
+}
+
+// TODO interface instead of SlackAPI
+type UserLookup struct {
+	api UserLookupSlackAPI
 
 	mappedUserApp     map[string]string
 	mappedUserAppSync sync.RWMutex
 }
 
-func NewCache(api *slack.Client) *Cache {
-	return &Cache{
+func NewUserLookup(api UserLookupSlackAPI) *UserLookup {
+	return &UserLookup{
 		api:           api,
 		mappedUserApp: map[string]string{},
 	}
 }
 
-func (c *Cache) IsAppBot(appID, userID string) (bool, error) {
+func (c *UserLookup) IsAppBot(appID, userID string) (bool, error) {
 	c.mappedUserAppSync.RLock()
 	appUserID, known := c.mappedUserApp[userID]
 	c.mappedUserAppSync.RUnlock()
@@ -43,6 +49,7 @@ func (c *Cache) IsAppBot(appID, userID string) (bool, error) {
 		is = appID
 	}
 
+	// TODO occasional purge of non-apps
 	c.mappedUserAppSync.Lock()
 	c.mappedUserApp[userID] = is
 	c.mappedUserAppSync.Unlock()

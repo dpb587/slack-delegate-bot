@@ -2,9 +2,11 @@ package http
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	ourslack "github.com/dpb587/slack-delegate-bot/pkg/slack"
 	"github.com/labstack/echo/v4"
@@ -14,18 +16,20 @@ import (
 )
 
 type EventHandler struct {
-	messenger     *ourslack.Messenger
+	processor     ourslack.Processor
 	signingSecret string
 }
 
-func NewEventHandler(messenger *ourslack.Messenger, signingSecret string) *EventHandler {
+func NewEventHandler(processor ourslack.Processor, signingSecret string) *EventHandler {
 	return &EventHandler{
-		messenger:     messenger,
+		processor:     processor,
 		signingSecret: signingSecret,
 	}
 }
 
 func (h EventHandler) Accept(c echo.Context) error {
+	at := time.Now()
+
 	if c.Request().Header.Get("content-type") != "application/json" {
 		return c.String(http.StatusUnsupportedMediaType, http.StatusText(http.StatusUnsupportedMediaType))
 	}
@@ -39,6 +43,8 @@ func (h EventHandler) Accept(c echo.Context) error {
 	if err != nil {
 		return errors.Wrap(err, "reading body")
 	}
+
+	fmt.Printf("%s\n", body) // TODO log.DEBUG
 
 	if err = verifier.Ensure(); err != nil {
 		// TODO log err
@@ -61,20 +67,15 @@ func (h EventHandler) Accept(c echo.Context) error {
 
 		return c.String(http.StatusOK, r.Challenge)
 	case slackevents.CallbackEvent:
-		c := ourslack.EventContext{
-			AppID:  event.APIAppID,
-			TeamID: event.TeamID,
+		err := h.processor.Process(at, "callback_event", body)
+		if err != nil {
+			return errors.Wrap(err, "processing event")
 		}
 
-		switch inner := event.InnerEvent.Data.(type) {
-		case *slackevents.AppMentionEvent:
-			return h.messenger.HandleAppMention(c, *inner)
-		case *slackevents.MessageEvent:
-			return h.messenger.HandleMessage(c, *inner)
-		}
+		return c.NoContent(http.StatusAccepted)
 	}
 
-	// warn to unsubscribe
+	// TODO warn to add handling of or unsubscribe from event
 
 	return c.NoContent(http.StatusOK)
 }
