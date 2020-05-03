@@ -12,17 +12,15 @@ import (
 
 type factory struct {
 	delegatesFactory delegates.Factory
-	api              emaillookupmap.SlackAPI
 }
 
 type Options struct {
 	From map[interface{}]interface{} `yaml:"from"`
 }
 
-func New(delegatesFactory delegates.Factory, api emaillookupmap.SlackAPI) delegates.Factory {
+func New(delegatesFactory delegates.Factory) delegates.Factory {
 	return &factory{
 		delegatesFactory: delegatesFactory,
-		api:              api,
 	}
 }
 
@@ -46,7 +44,6 @@ func (f factory) Create(name string, options interface{}) (delegate.Delegator, e
 	}
 
 	return &emaillookupmap.Delegator{
-		API:  f.api,
 		From: from,
 	}, nil
 }

@@ -3,8 +3,8 @@ package emaillookupmap
 import (
 	"strings"
 
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
+	"github.com/dpb587/slack-delegate-bot/pkg/message"
 	"github.com/slack-go/slack"
 )
 
@@ -14,7 +14,6 @@ type SlackAPI interface {
 
 type Delegator struct {
 	From delegate.Delegator
-	API  SlackAPI
 }
 
 var _ delegate.Delegator = &Delegator{}
@@ -39,7 +38,12 @@ func (i Delegator) Delegate(m message.Message) ([]delegate.Delegate, error) {
 			continue
 		}
 
-		user, err := i.API.GetUserByEmail(literalInterrupt.Text)
+		api, ok := m.ServiceAPI.(SlackAPI)
+		if !ok {
+			return nil, nil
+		}
+
+		user, err := api.GetUserByEmail(literalInterrupt.Text)
 		if err != nil {
 			// TODO warn?
 		}

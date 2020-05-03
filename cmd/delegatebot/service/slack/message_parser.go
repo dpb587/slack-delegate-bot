@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
+	"github.com/dpb587/slack-delegate-bot/pkg/message"
 	"github.com/slack-go/slack"
 )
 

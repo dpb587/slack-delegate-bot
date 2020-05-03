@@ -2,7 +2,7 @@ package multiple
 
 import (
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/handler"
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
+	"github.com/dpb587/slack-delegate-bot/pkg/message"
 )
 
 type Handler struct {

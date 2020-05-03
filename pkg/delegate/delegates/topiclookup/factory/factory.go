@@ -10,18 +10,14 @@ import (
 	"github.com/pkg/errors"
 )
 
-type factory struct {
-	api topiclookup.SlackAPI
-}
+type factory struct{}
 
 type Options struct {
 	Channel string `yaml:"channel"`
 }
 
-func New(api topiclookup.SlackAPI) delegates.Factory {
-	return &factory{
-		api: api,
-	}
+func New() delegates.Factory {
+	return factory{}
 }
 
 func (f factory) Create(name string, options interface{}) (delegate.Delegator, error) {
@@ -37,7 +33,6 @@ func (f factory) Create(name string, options interface{}) (delegate.Delegator, e
 	}
 
 	return &topiclookup.Delegator{
-		API:     f.api,
 		Channel: parsed.Channel,
 	}, nil
 }

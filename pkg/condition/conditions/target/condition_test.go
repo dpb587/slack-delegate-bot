@@ -2,7 +2,7 @@ package target_test
 
 import (
 	. "github.com/dpb587/slack-delegate-bot/pkg/condition/conditions/target"
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
+	"github.com/dpb587/slack-delegate-bot/pkg/message"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

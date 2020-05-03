@@ -3,8 +3,8 @@ package pairist
 import (
 	"github.com/dpb587/go-pairist/api"
 	"github.com/dpb587/go-pairist/denormalized"
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
+	"github.com/dpb587/slack-delegate-bot/pkg/message"
 )
 
 type Delegator struct {

@@ -5,8 +5,8 @@ import (
 	"regexp"
 
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/handler"
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates"
+	"github.com/dpb587/slack-delegate-bot/pkg/message"
 	"github.com/pkg/errors"
 	"github.com/slack-go/slack"
 )

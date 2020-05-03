@@ -4,8 +4,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
+	"github.com/dpb587/slack-delegate-bot/pkg/message"
 	"github.com/pkg/errors"
 	"github.com/slack-go/slack"
 )
@@ -16,7 +16,6 @@ type SlackAPI interface {
 }
 
 type Delegator struct {
-	API     SlackAPI
 	Channel string
 }
 
@@ -29,11 +28,13 @@ var topicInterruptREs = []*regexp.Regexp{
 
 func (i Delegator) Delegate(m message.Message) ([]delegate.Delegate, error) {
 	channel := m.InterruptTarget
-	if i.Channel != "" {
-		channel = i.Channel
+
+	api, ok := m.ServiceAPI.(SlackAPI)
+	if !ok {
+		return nil, nil
 	}
 
-	info, err := i.API.GetConversationInfo(channel, false)
+	info, err := api.GetConversationInfo(channel, false)
 	if err != nil {
 		return nil, errors.Wrapf(err, "getting info of channel %s", channel)
 	}

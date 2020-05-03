@@ -12,7 +12,7 @@ func main() {
 	opts := &opts.Root{}
 	main := cmd.Root{
 		Root: opts,
-		Run: &cmd.RunCmd{
+		API: &cmd.APICmd{
 			Root: opts,
 		},
 		Validate: &cmd.ValidateCmd{

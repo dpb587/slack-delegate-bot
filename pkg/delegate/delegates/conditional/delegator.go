@@ -3,7 +3,7 @@ package conditional
 import (
 	"github.com/dpb587/slack-delegate-bot/pkg/condition"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
+	"github.com/dpb587/slack-delegate-bot/pkg/message"
 )
 
 type Delegator struct {

@@ -5,7 +5,7 @@ import (
 	"sync"
 
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/handler"
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
+	"github.com/dpb587/slack-delegate-bot/pkg/message"
 )
 
 type FakeHandler struct {

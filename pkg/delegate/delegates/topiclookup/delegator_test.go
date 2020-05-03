@@ -3,10 +3,10 @@ package topiclookup_test
 import (
 	"errors"
 
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
 	. "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/topiclookup"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/topiclookup/topiclookupfakes"
+	"github.com/dpb587/slack-delegate-bot/pkg/message"
 	"github.com/slack-go/slack"
 
 	. "github.com/onsi/ginkgo"

@@ -2,8 +2,8 @@ package pagerduty
 
 import (
 	pagerduty "github.com/PagerDuty/go-pagerduty"
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
+	"github.com/dpb587/slack-delegate-bot/pkg/message"
 	"github.com/pkg/errors"
 )
 

@@ -17,7 +17,6 @@ import (
 	unionfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/union/factory"
 	userfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/user/factory"
 	usergroupfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/usergroup/factory"
-	"github.com/slack-go/slack"
 )
 
 type factory struct {
@@ -26,19 +25,19 @@ type factory struct {
 
 var _ delegates.Factory = &factory{}
 
-func New(conditionsFactory conditions.Factory, slackAPI *slack.Client) delegates.Factory {
+func New(conditionsFactory conditions.Factory) delegates.Factory {
 	f := &factory{
 		factory: map[string]delegates.Factory{},
 	}
 
 	f.factory["coalesce"] = coalescefactory.New(f)
-	f.factory["emaillookupmap"] = emaillookupmapfactory.New(f, slackAPI)
+	f.factory["emaillookupmap"] = emaillookupmapfactory.New(f)
 	f.factory["if"] = conditionalfactory.New(f, conditionsFactory)
 	f.factory["literal"] = literalfactory.New()
 	f.factory["literalmap"] = literalmapfactory.New(f)
 	f.factory["pagerduty"] = pagerdutyfactory.New()
 	f.factory["pairist"] = pairistfactory.New()
-	f.factory["topiclookup"] = topiclookupfactory.New(slackAPI)
+	f.factory["topiclookup"] = topiclookupfactory.New()
 	f.factory["union"] = unionfactory.New(f)
 	f.factory["user"] = userfactory.New()
 	f.factory["usergroup"] = usergroupfactory.New()

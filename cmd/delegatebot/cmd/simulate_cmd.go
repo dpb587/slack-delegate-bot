@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/opts"
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/service/slack"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates"
+	"github.com/dpb587/slack-delegate-bot/pkg/message"
 	"github.com/pkg/errors"
 	slackapi "github.com/slack-go/slack"
 )
