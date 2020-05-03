@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	nethttp "net/http"
 	"time"
 
@@ -15,13 +16,16 @@ import (
 type APICmd struct {
 	*opts.Root `no-flags:"true"`
 
+	BindHost string `long:"bind-host" description:"Bind host/IP" env:"BINDING" default:"0.0.0.0"`
+	BindPort int    `long:"bind-port" description:"Bind port" env:"PORT" default:"8080"`
+
 	SlackToken         string `long:"slack-token" description:"Slack Bot OAuth API token" env:"SLACK_TOKEN"`
 	SlackSigningSecret string `long:"slack-signing-secret" description:"Slack App Signing Secret" env:"SLACK_SIGNING_SECRET"`
 }
 
 func (c *APICmd) Execute(_ []string) error {
 	http := &nethttp.Server{
-		Addr:         ":1234",
+		Addr:         fmt.Sprintf("%s:%d", c.BindHost, c.BindPort),
 		ReadTimeout:  30 * time.Second,
 		WriteTimeout: 30 * time.Second,
 	}

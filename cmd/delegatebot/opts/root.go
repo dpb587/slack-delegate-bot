@@ -6,7 +6,6 @@ import (
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/args"
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/handler"
 	handlerfactory "github.com/dpb587/slack-delegate-bot/cmd/delegatebot/handler/factory"
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/service/http"
 	conditionsfactory "github.com/dpb587/slack-delegate-bot/pkg/condition/conditions/defaultfactory"
 	interruptsfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/defaultfactory"
 	"github.com/pkg/errors"
@@ -14,8 +13,6 @@ import (
 )
 
 type Root struct {
-	httpService *http.Service
-
 	Configs []string `long:"config" description:"Path to configuration files"`
 	handler handler.Handler
 
