@@ -7,8 +7,8 @@ import (
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/handler"
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates"
-	"github.com/nlopes/slack"
 	"github.com/pkg/errors"
+	"github.com/slack-go/slack"
 )
 
 var reChannelMention = regexp.MustCompile(`<#([^|]+)|([^>]+)>`)

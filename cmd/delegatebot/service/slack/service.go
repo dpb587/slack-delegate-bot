@@ -4,9 +4,9 @@ import (
 	"time"
 
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/handler"
-	"github.com/nlopes/slack"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	"github.com/slack-go/slack"
 )
 
 type Service struct {

@@ -7,7 +7,7 @@ import (
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
 	. "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/topiclookup"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/topiclookup/topiclookupfakes"
-	"github.com/nlopes/slack"
+	"github.com/slack-go/slack"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"

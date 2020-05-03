@@ -17,7 +17,7 @@ import (
 	unionfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/union/factory"
 	userfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/user/factory"
 	usergroupfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/usergroup/factory"
-	"github.com/nlopes/slack"
+	"github.com/slack-go/slack"
 )
 
 type factory struct {

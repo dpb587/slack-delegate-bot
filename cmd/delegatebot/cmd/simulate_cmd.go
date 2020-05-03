@@ -8,8 +8,8 @@ import (
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/opts"
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/service/slack"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates"
-	slackapi "github.com/nlopes/slack"
 	"github.com/pkg/errors"
+	slackapi "github.com/slack-go/slack"
 )
 
 type SimulateCmd struct {

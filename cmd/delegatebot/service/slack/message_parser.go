@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
-	"github.com/nlopes/slack"
+	"github.com/slack-go/slack"
 )
 
 type MessageParser struct {

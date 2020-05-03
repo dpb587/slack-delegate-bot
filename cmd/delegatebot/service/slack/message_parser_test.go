@@ -6,7 +6,7 @@ import (
 
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/message"
 	. "github.com/dpb587/slack-delegate-bot/cmd/delegatebot/service/slack"
-	"github.com/nlopes/slack"
+	"github.com/slack-go/slack"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

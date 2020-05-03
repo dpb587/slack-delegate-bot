@@ -5,7 +5,7 @@ import (
 	"sync"
 
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/topiclookup"
-	"github.com/nlopes/slack"
+	"github.com/slack-go/slack"
 )
 
 type FakeSlackAPI struct {
