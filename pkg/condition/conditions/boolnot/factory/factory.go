@@ -6,7 +6,7 @@ import (
 	"github.com/dpb587/slack-delegate-bot/pkg/condition"
 	"github.com/dpb587/slack-delegate-bot/pkg/condition/conditions"
 	"github.com/dpb587/slack-delegate-bot/pkg/condition/conditions/boolnot"
-	"github.com/dpb587/slack-delegate-bot/pkg/config"
+	"github.com/dpb587/slack-delegate-bot/pkg/configutil"
 	"github.com/pkg/errors"
 )
 
@@ -25,7 +25,7 @@ func (f factory) Create(name string, options interface{}) (condition.Condition, 
 		return nil, fmt.Errorf("invalid condition: %s", name)
 	}
 
-	key, value, err := config.KeyValueTuple(options)
+	key, value, err := configutil.KeyValueTuple(options)
 	if err != nil {
 		return nil, errors.Wrap(err, "parsing")
 	}

@@ -4,10 +4,11 @@ import (
 	"os"
 
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/args"
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/handler"
-	handlerfactory "github.com/dpb587/slack-delegate-bot/cmd/delegatebot/handler/factory"
 	conditionsfactory "github.com/dpb587/slack-delegate-bot/pkg/condition/conditions/defaultfactory"
 	interruptsfactory "github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/defaultfactory"
+	"github.com/dpb587/slack-delegate-bot/pkg/handler"
+	"github.com/dpb587/slack-delegate-bot/pkg/handler/fs"
+	"github.com/dpb587/slack-delegate-bot/pkg/handler/yaml"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
@@ -18,6 +19,8 @@ type Root struct {
 
 	LogLevel args.LogLevel `long:"log-level" description:"Show additional levels of log messages" env:"LOG_LEVEL" default:"INFO"`
 	logger   logrus.FieldLogger
+
+	parser *yaml.Parser
 }
 
 func (r *Root) GetLogger() logrus.FieldLogger {
@@ -33,13 +36,20 @@ func (r *Root) GetLogger() logrus.FieldLogger {
 	return r.logger
 }
 
-func (r *Root) GetHandler() (handler.Handler, error) {
-	if r.handler == nil {
+func (r *Root) GetParser() *yaml.Parser {
+	if r.parser == nil {
 		conditions := conditionsfactory.New()
 		interrupts := interruptsfactory.New(conditions)
 
-		loader := handlerfactory.NewFileLoader(interrupts, conditions)
-		h, err := loader.Load(r.Configs)
+		r.parser = yaml.NewParser(interrupts, conditions)
+	}
+
+	return r.parser
+}
+
+func (r *Root) GetHandler() (handler.Handler, error) {
+	if r.handler == nil {
+		h, err := fs.BuildHandler(r.GetParser(), r.Configs...)
 		if err != nil {
 			return nil, errors.Wrap(err, "loading configs")
 		}

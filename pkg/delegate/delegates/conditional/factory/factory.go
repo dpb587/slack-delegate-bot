@@ -3,8 +3,8 @@ package factory
 import (
 	"fmt"
 
-	"github.com/dpb587/slack-delegate-bot/pkg/config"
 	"github.com/dpb587/slack-delegate-bot/pkg/condition/conditions"
+	"github.com/dpb587/slack-delegate-bot/pkg/configutil"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/conditional"
@@ -36,7 +36,7 @@ func (f factory) Create(name string, options interface{}) (delegate.Delegator, e
 
 	parsed := Options{}
 
-	err := config.RemarshalYAML(options, &parsed)
+	err := configutil.RemarshalYAML(options, &parsed)
 	if err != nil {
 		return nil, errors.Wrap(err, "remarshalling")
 	}
@@ -46,7 +46,7 @@ func (f factory) Create(name string, options interface{}) (delegate.Delegator, e
 		return nil, errors.Wrap(err, "creating conditional when")
 	}
 
-	thenName, thenOptions, err := config.KeyValueTuple(parsed.Then)
+	thenName, thenOptions, err := configutil.KeyValueTuple(parsed.Then)
 	if err != nil {
 		return nil, errors.Wrap(err, "parsing conditional then")
 	}
@@ -59,7 +59,7 @@ func (f factory) Create(name string, options interface{}) (delegate.Delegator, e
 	var else_ delegate.Delegator
 
 	if parsed.Else != nil {
-		elseName, elseOptions, err := config.KeyValueTuple(parsed.Else)
+		elseName, elseOptions, err := configutil.KeyValueTuple(parsed.Else)
 		if err != nil {
 			return nil, errors.Wrap(err, "parsing conditional else")
 		}

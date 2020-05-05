@@ -18,13 +18,13 @@ type Delegator struct {
 
 var _ delegate.Delegator = &Delegator{}
 
-func (i Delegator) Delegate(m message.Message) ([]delegate.Delegate, error) {
+func (i Delegator) Delegate(m message.Message) ([]message.Delegate, error) {
 	inner, err := i.From.Delegate(m)
 	if err != nil {
 		return nil, err
 	}
 
-	var res []delegate.Delegate
+	var res []message.Delegate
 
 	for _, innerInterrupt := range inner {
 		literalInterrupt, ok := innerInterrupt.(delegate.Literal)

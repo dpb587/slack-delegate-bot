@@ -3,10 +3,10 @@ package delegates
 import (
 	"strings"
 
-	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
+	"github.com/dpb587/slack-delegate-bot/pkg/message"
 )
 
-func Join(delegates []delegate.Delegate, sep string) string {
+func Join(delegates []message.Delegate, sep string) string {
 	var str []string
 
 	for _, i := range delegates {

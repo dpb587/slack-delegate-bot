@@ -35,19 +35,19 @@ var _ = Describe("Delegator", func() {
 
 	DescribeTable(
 		"parsing the real topics",
-		func(input []delegate.Delegate, expected []delegate.Delegate) {
+		func(input []message.Delegate, expected []message.Delegate) {
 			from.DelegateReturns(input, nil)
 
 			actual, err := subject.Delegate(msg)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(actual).To(ConsistOf(expected))
 		},
-		Entry("matched user", []delegate.Delegate{delegate.Literal{Text: "fake-user1"}}, []delegate.Delegate{delegate.User{ID: "U12345678"}}),
-		Entry("unknown user", []delegate.Delegate{delegate.Literal{Text: "fake-user3"}}, []delegate.Delegate{delegate.Literal{Text: "fake-user3"}}),
-		Entry("matched usergroup", []delegate.Delegate{delegate.Literal{Text: "fake-usergroup1"}}, []delegate.Delegate{delegate.UserGroup{ID: "G12345678"}}),
-		Entry("unknown usergroup", []delegate.Delegate{delegate.Literal{Text: "fake-usergroup3"}}, []delegate.Delegate{delegate.Literal{Text: "fake-usergroup3"}}),
-		Entry("multiple matches", []delegate.Delegate{delegate.Literal{Text: "fake-user1"}, delegate.Literal{Text: "fake-usergroup1"}}, []delegate.Delegate{delegate.User{ID: "U12345678"}, delegate.UserGroup{ID: "G12345678"}}),
-		Entry("non-literals are ignored", []delegate.Delegate{delegate.User{ID: "U98765432"}}, []delegate.Delegate{delegate.User{ID: "U98765432"}}),
+		Entry("matched user", []message.Delegate{delegate.Literal{Text: "fake-user1"}}, []message.Delegate{delegate.User{ID: "U12345678"}}),
+		Entry("unknown user", []message.Delegate{delegate.Literal{Text: "fake-user3"}}, []message.Delegate{delegate.Literal{Text: "fake-user3"}}),
+		Entry("matched usergroup", []message.Delegate{delegate.Literal{Text: "fake-usergroup1"}}, []message.Delegate{delegate.UserGroup{ID: "G12345678"}}),
+		Entry("unknown usergroup", []message.Delegate{delegate.Literal{Text: "fake-usergroup3"}}, []message.Delegate{delegate.Literal{Text: "fake-usergroup3"}}),
+		Entry("multiple matches", []message.Delegate{delegate.Literal{Text: "fake-user1"}, delegate.Literal{Text: "fake-usergroup1"}}, []message.Delegate{delegate.User{ID: "U12345678"}, delegate.UserGroup{ID: "G12345678"}}),
+		Entry("non-literals are ignored", []message.Delegate{delegate.User{ID: "U98765432"}}, []message.Delegate{delegate.User{ID: "U98765432"}}),
 	)
 
 	It("propagates errors", func() {

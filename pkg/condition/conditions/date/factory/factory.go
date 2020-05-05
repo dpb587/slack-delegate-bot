@@ -7,7 +7,7 @@ import (
 	"github.com/dpb587/slack-delegate-bot/pkg/condition"
 	"github.com/dpb587/slack-delegate-bot/pkg/condition/conditions"
 	"github.com/dpb587/slack-delegate-bot/pkg/condition/conditions/date"
-	"github.com/dpb587/slack-delegate-bot/pkg/config"
+	"github.com/dpb587/slack-delegate-bot/pkg/configutil"
 	"github.com/pkg/errors"
 )
 
@@ -29,7 +29,7 @@ func (f factory) Create(name string, options interface{}) (condition.Condition, 
 
 	parsed := Options{}
 
-	err := config.RemarshalYAML(options, &parsed)
+	err := configutil.RemarshalYAML(options, &parsed)
 	if err != nil {
 		return nil, errors.Wrap(err, "remarshalling")
 	}

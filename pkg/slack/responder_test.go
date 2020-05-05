@@ -3,9 +3,8 @@ package slack_test
 import (
 	"errors"
 
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/handler"
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/handler/handlerfakes"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
+	"github.com/dpb587/slack-delegate-bot/pkg/handler/handlerfakes"
 	"github.com/dpb587/slack-delegate-bot/pkg/message"
 	. "github.com/dpb587/slack-delegate-bot/pkg/slack"
 	"github.com/dpb587/slack-delegate-bot/pkg/slack/slackfakes"
@@ -36,7 +35,7 @@ var _ = Describe("MessageHandler", func() {
 
 	Context("delegate handling", func() {
 		It("propagates errors", func() {
-			interruptHandler.ExecuteReturns(handler.MessageResponse{}, errors.New("fake-err1"))
+			interruptHandler.ExecuteReturns(message.MessageResponse{}, errors.New("fake-err1"))
 
 			err := subject.ProcessMessage(msg)
 			Expect(err).To(HaveOccurred())
@@ -47,8 +46,8 @@ var _ = Describe("MessageHandler", func() {
 		Context("delegates provided", func() {
 			BeforeEach(func() {
 				interruptHandler.ExecuteReturns(
-					handler.MessageResponse{
-						Delegates: []delegate.Delegate{
+					message.MessageResponse{
+						Delegates: []message.Delegate{
 							delegate.Literal{Text: "something"},
 							delegate.Literal{Text: "completely"},
 							delegate.Literal{Text: "different"},
@@ -121,7 +120,7 @@ var _ = Describe("MessageHandler", func() {
 			Context("custom empty messages", func() {
 				It("uses it", func() {
 					interruptHandler.ExecuteReturns(
-						handler.MessageResponse{
+						message.MessageResponse{
 							EmptyMessage: "go find your own answer",
 						},
 						nil,

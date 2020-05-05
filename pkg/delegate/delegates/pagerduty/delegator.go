@@ -15,7 +15,7 @@ type Delegator struct {
 
 var _ delegate.Delegator = &Delegator{}
 
-func (i Delegator) Delegate(_ message.Message) ([]delegate.Delegate, error) {
+func (i Delegator) Delegate(_ message.Message) ([]message.Delegate, error) {
 	oncalls, err := i.Client.ListOnCalls(pagerduty.ListOnCallOptions{
 		Includes:            []string{"users"},
 		EscalationPolicyIDs: []string{i.EscalationPolicy},
@@ -34,7 +34,7 @@ func (i Delegator) Delegate(_ message.Message) ([]delegate.Delegate, error) {
 		scheduledUsers[oncall.User.Email] = struct{}{}
 	}
 
-	var res []delegate.Delegate
+	var res []message.Delegate
 
 	for scheduledUser := range scheduledUsers {
 		res = append(res, delegate.Literal{Text: scheduledUser})

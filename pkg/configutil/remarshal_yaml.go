@@ -1,4 +1,4 @@
-package config
+package configutil
 
 import (
 	"github.com/pkg/errors"

@@ -11,6 +11,6 @@ type Delegator struct {
 
 var _ delegate.Delegator = &Delegator{}
 
-func (i Delegator) Delegate(_ message.Message) ([]delegate.Delegate, error) {
-	return []delegate.Delegate{delegate.User{ID: i.ID}}, nil
+func (i Delegator) Delegate(_ message.Message) ([]message.Delegate, error) {
+	return []message.Delegate{delegate.User{ID: i.ID}}, nil
 }

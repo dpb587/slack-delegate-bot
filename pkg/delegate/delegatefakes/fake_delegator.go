@@ -9,24 +9,24 @@ import (
 )
 
 type FakeDelegator struct {
-	DelegateStub        func(message.Message) ([]delegate.Delegate, error)
+	DelegateStub        func(message.Message) ([]message.Delegate, error)
 	delegateMutex       sync.RWMutex
 	delegateArgsForCall []struct {
 		arg1 message.Message
 	}
 	delegateReturns struct {
-		result1 []delegate.Delegate
+		result1 []message.Delegate
 		result2 error
 	}
 	delegateReturnsOnCall map[int]struct {
-		result1 []delegate.Delegate
+		result1 []message.Delegate
 		result2 error
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeDelegator) Delegate(arg1 message.Message) ([]delegate.Delegate, error) {
+func (fake *FakeDelegator) Delegate(arg1 message.Message) ([]message.Delegate, error) {
 	fake.delegateMutex.Lock()
 	ret, specificReturn := fake.delegateReturnsOnCall[len(fake.delegateArgsForCall)]
 	fake.delegateArgsForCall = append(fake.delegateArgsForCall, struct {
@@ -55,24 +55,24 @@ func (fake *FakeDelegator) DelegateArgsForCall(i int) message.Message {
 	return fake.delegateArgsForCall[i].arg1
 }
 
-func (fake *FakeDelegator) DelegateReturns(result1 []delegate.Delegate, result2 error) {
+func (fake *FakeDelegator) DelegateReturns(result1 []message.Delegate, result2 error) {
 	fake.DelegateStub = nil
 	fake.delegateReturns = struct {
-		result1 []delegate.Delegate
+		result1 []message.Delegate
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeDelegator) DelegateReturnsOnCall(i int, result1 []delegate.Delegate, result2 error) {
+func (fake *FakeDelegator) DelegateReturnsOnCall(i int, result1 []message.Delegate, result2 error) {
 	fake.DelegateStub = nil
 	if fake.delegateReturnsOnCall == nil {
 		fake.delegateReturnsOnCall = make(map[int]struct {
-			result1 []delegate.Delegate
+			result1 []message.Delegate
 			result2 error
 		})
 	}
 	fake.delegateReturnsOnCall[i] = struct {
-		result1 []delegate.Delegate
+		result1 []message.Delegate
 		result2 error
 	}{result1, result2}
 }

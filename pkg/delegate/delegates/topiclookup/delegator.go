@@ -26,7 +26,7 @@ var topicInterruptREs = []*regexp.Regexp{
 	regexp.MustCompile("(?i)[`*_]*interrupt[`*_:]*\\s+(<[^>]+>(,?\\s+and\\s+|,?\\s*)?)+"),
 }
 
-func (i Delegator) Delegate(m message.Message) ([]delegate.Delegate, error) {
+func (i Delegator) Delegate(m message.Message) ([]message.Delegate, error) {
 	channel := m.InterruptTarget
 
 	if v := i.Channel; v != "" {
@@ -52,7 +52,7 @@ func (i Delegator) Delegate(m message.Message) ([]delegate.Delegate, error) {
 
 		slackRefMatches := slackRefRE.FindAllStringSubmatch(matches[0], -1)
 
-		var results []delegate.Delegate
+		var results []message.Delegate
 
 		for _, slackRefMatch := range slackRefMatches {
 			match := slackRefMatch[0]

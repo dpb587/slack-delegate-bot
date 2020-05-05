@@ -3,8 +3,8 @@ package slack
 import (
 	"fmt"
 
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/handler"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates"
+	"github.com/dpb587/slack-delegate-bot/pkg/handler"
 	"github.com/dpb587/slack-delegate-bot/pkg/message"
 	"github.com/pkg/errors"
 	"github.com/slack-go/slack"

@@ -1,7 +1,7 @@
-package config_test
+package configutil_test
 
 import (
-	. "github.com/dpb587/slack-delegate-bot/pkg/config"
+	. "github.com/dpb587/slack-delegate-bot/pkg/configutil"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"

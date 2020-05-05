@@ -18,7 +18,7 @@ type Delegator struct {
 
 var _ delegate.Delegator = &Delegator{}
 
-func (i Delegator) Delegate(_ message.Message) ([]delegate.Delegate, error) {
+func (i Delegator) Delegate(_ message.Message) ([]message.Delegate, error) {
 	curr, err := i.Client.GetTeamCurrent(i.Team)
 	if err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func (i Delegator) Delegate(_ message.Message) ([]delegate.Delegate, error) {
 		lanes = allLanes.ByRole(i.Role)
 	}
 
-	var res []delegate.Delegate
+	var res []message.Delegate
 
 	for _, lane := range lanes {
 		for _, person := range lane.People {

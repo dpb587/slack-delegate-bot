@@ -14,7 +14,7 @@ type Delegator struct {
 
 var _ delegate.Delegator = &Delegator{}
 
-func (i Delegator) Delegate(m message.Message) ([]delegate.Delegate, error) {
+func (i Delegator) Delegate(m message.Message) ([]message.Delegate, error) {
 	when, err := i.When.Evaluate(m)
 	if err != nil {
 		return nil, err

@@ -3,7 +3,7 @@ package factory
 import (
 	"fmt"
 
-	"github.com/dpb587/slack-delegate-bot/pkg/config"
+	"github.com/dpb587/slack-delegate-bot/pkg/configutil"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/union"
@@ -29,7 +29,7 @@ func (f factory) Create(name string, options interface{}) (delegate.Delegator, e
 
 	parsed := Options{}
 
-	err := config.RemarshalYAML(options, &parsed)
+	err := configutil.RemarshalYAML(options, &parsed)
 	if err != nil {
 		return nil, errors.Wrap(err, "remarshalling")
 	}
@@ -37,7 +37,7 @@ func (f factory) Create(name string, options interface{}) (delegate.Delegator, e
 	var ccds []delegate.Delegator
 
 	for optionsIdx, options := range parsed {
-		key, value, err := config.KeyValueTuple(options)
+		key, value, err := configutil.KeyValueTuple(options)
 		if err != nil {
 			return nil, errors.Wrapf(err, "parsing union delegate %d", optionsIdx)
 		}

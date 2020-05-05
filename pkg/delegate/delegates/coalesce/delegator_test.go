@@ -23,10 +23,10 @@ var _ = Describe("Delegator", func() {
 		delegateNone.DelegateReturns(nil, nil)
 
 		delegateOne = &delegatefakes.FakeDelegator{}
-		delegateOne.DelegateReturns([]delegate.Delegate{delegate.Literal{Text: "one"}}, nil)
+		delegateOne.DelegateReturns([]message.Delegate{delegate.Literal{Text: "one"}}, nil)
 
 		delegateMany = &delegatefakes.FakeDelegator{}
-		delegateMany.DelegateReturns([]delegate.Delegate{delegate.Literal{Text: "many1"}, delegate.Literal{Text: "many2"}}, nil)
+		delegateMany.DelegateReturns([]message.Delegate{delegate.Literal{Text: "many1"}, delegate.Literal{Text: "many2"}}, nil)
 	})
 
 	It("errors early", func() {

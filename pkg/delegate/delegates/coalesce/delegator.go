@@ -11,7 +11,7 @@ type Delegator struct {
 
 var _ delegate.Delegator = &Delegator{}
 
-func (i Delegator) Delegate(m message.Message) ([]delegate.Delegate, error) {
+func (i Delegator) Delegate(m message.Message) ([]message.Delegate, error) {
 	for _, sub := range i.Delegators {
 		subr, err := sub.Delegate(m)
 		if err != nil {

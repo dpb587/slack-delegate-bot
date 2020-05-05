@@ -1,4 +1,4 @@
-package single_test
+package configutil_test
 
 import (
 	. "github.com/onsi/ginkgo"
@@ -9,5 +9,5 @@ import (
 
 func TestTopiclookup(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "github.com/dpb587/slack-delegate-bot/cmd/delegatebot/handler/handlers/single")
+	RunSpecs(t, "github.com/dpb587/slack-delegate-bot/pkg/configutil")
 }

@@ -30,7 +30,7 @@ var _ = Describe("Delegator", func() {
 
 	DescribeTable(
 		"parsing the real topics",
-		func(topic string, expected ...delegate.Delegate) {
+		func(topic string, expected ...message.Delegate) {
 			channelInfo := &slack.Channel{}
 			channelInfo.Topic = slack.Topic{
 				Value: topic,
