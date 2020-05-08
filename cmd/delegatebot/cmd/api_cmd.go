@@ -18,8 +18,9 @@ import (
 type APICmd struct {
 	*opts.Root `no-flags:"true"`
 
-	BindHost string `long:"bind-host" description:"Bind host/IP" env:"BINDING" default:"0.0.0.0"`
-	BindPort int    `long:"bind-port" description:"Bind port" env:"PORT" default:"8080"`
+	BindHost    string `long:"bind-host" description:"Bind host/IP" env:"BINDING" default:"0.0.0.0"`
+	BindPort    int    `long:"bind-port" description:"Bind port" env:"PORT" default:"8080"`
+	ExternalURL string `long:"external-url" description:"Public URL" env:"HTTP_EXTERNAL_URL"`
 
 	SlackToken         string `long:"slack-token" description:"Slack Bot OAuth API token" env:"SLACK_TOKEN"`
 	SlackSigningSecret string `long:"slack-signing-secret" description:"Slack App Signing Secret" env:"SLACK_SIGNING_SECRET"`

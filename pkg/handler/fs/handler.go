@@ -32,6 +32,10 @@ func BuildHandler(parser *yaml.Parser, paths ...string) (handler.Handler, error)
 		handlers = append(handlers, h)
 	}
 
+	if len(handlers) == 1 {
+		return handlers[0], nil
+	}
+
 	return handler.NewCoalesceHandler(handlers...), nil
 }
 

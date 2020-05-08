@@ -26,7 +26,7 @@ func (l Parser) Parse(buf []byte) (handler.Handler, error) {
 
 	var parsed Schema
 
-	err := yaml.Unmarshal(buf, &parsed)
+	err := yaml.Unmarshal(buf, &parsed.DelegateBot) // TODO remove `delegatebot` wrapper?
 	if err != nil {
 		return nil, errors.Wrap(err, "unmarshalling")
 	}
