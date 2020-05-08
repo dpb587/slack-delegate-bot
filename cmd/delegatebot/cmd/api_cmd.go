@@ -9,6 +9,8 @@ import (
 	zlhttp "github.com/dpb587/slack-delegate-bot/pkg/http"
 	"github.com/dpb587/slack-delegate-bot/pkg/slack"
 	slackhttp "github.com/dpb587/slack-delegate-bot/pkg/slack/http"
+	"github.com/dpb587/slack-delegate-bot/pkg/slack/slash"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/sirupsen/logrus"
 	slackapi "github.com/slack-go/slack"
 )
@@ -64,8 +66,20 @@ func (c *APICmd) slackService() zlhttp.Service {
 		slack.NewResponder(api, h),
 	)
 
+	slashHandler := slash.Handlers{
+		slash.NewShowHandler(h, api),
+	}
+
+	slashHandler = append(slashHandler, slash.NewHelpHandler(
+		&slashHandler,
+		c.ExternalURL,
+	))
+
+	slashProcessor := slash.NewSyncProcessor(slashHandler)
+
 	return &slackhttp.Service{
-		Processor:     processor,
-		SigningSecret: c.SlackSigningSecret,
+		EventProcessor: processor,
+		SlashProcessor: slashProcessor,
+		SigningSecret:  c.SlackSigningSecret,
 	}
 }

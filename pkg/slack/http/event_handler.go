@@ -44,7 +44,7 @@ func (h EventHandler) Accept(c echo.Context) error {
 		return errors.Wrap(err, "reading body")
 	}
 
-	fmt.Printf("%s\n", body) // TODO log.DEBUG
+	fmt.Printf("%s\n", body) // TODO remove/debug
 
 	if err = verifier.Ensure(); err != nil {
 		// TODO log err
@@ -53,7 +53,7 @@ func (h EventHandler) Accept(c echo.Context) error {
 
 	event, err := slackevents.ParseEvent(json.RawMessage(body), slackevents.OptionNoVerifyToken())
 	if err != nil {
-		return errors.Wrap(err, "parsing event")
+		return errors.Wrap(err, "parsing incoming event")
 	}
 
 	switch event.Type {
