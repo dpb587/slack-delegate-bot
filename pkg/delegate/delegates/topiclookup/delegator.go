@@ -27,7 +27,7 @@ var topicInterruptREs = []*regexp.Regexp{
 }
 
 func (i Delegator) Delegate(m message.Message) ([]message.Delegate, error) {
-	channel := m.InterruptTarget
+	channel := m.TargetChannelID
 
 	if v := i.Channel; v != "" {
 		// explicit channel reference takes precedence

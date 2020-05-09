@@ -16,7 +16,7 @@ type Condition struct {
 var _ condition.Condition = &Condition{}
 
 func (c Condition) Evaluate(m message.Message) (bool, error) {
-	actual := m.Timestamp.In(c.Location).Format("15:04")
+	actual := m.Time.In(c.Location).Format("15:04")
 
 	if actual >= c.Start && actual < c.End {
 		return true, nil

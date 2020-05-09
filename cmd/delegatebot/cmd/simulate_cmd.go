@@ -42,12 +42,15 @@ func (c *SimulateCmd) Execute(_ []string) error {
 	}
 
 	msg := message.Message{
-		Origin:          "D1234567",
-		OriginType:      message.DirectMessageOriginType,
-		OriginTimestamp: fmt.Sprintf("%d.0", ts.Unix()),
-		OriginUserID:    "U1234567",
-		InterruptTarget: c.Args.Origin,
-		Text:            c.Args.Message,
+		ChannelTeamID:       "T1234567",
+		ChannelID:           "D1234567",
+		UserTeamID:          "T1234567",
+		UserID:              "U1234567",
+		TargetChannelTeamID: "T1234567",
+		TargetChannelID:     c.Args.Origin,
+		RawTimestamp:        fmt.Sprintf("%d.0", ts.Unix()),
+		RawText:             c.Args.Message,
+		Type:                message.DirectMessageMessageType,
 	}
 
 	response, err := handler.Execute(&msg)

@@ -54,6 +54,7 @@ var _ = Describe("EventParser", func() {
 		BeforeEach(func() {
 			event = slackevents.AppMentionEvent{
 				User:            realUserID,
+				UserTeam:        teamID,
 				Channel:         localChannelID,
 				Text:            fmt.Sprintf("hi <@%s> i haz questions", realUserID),
 				TimeStamp:       "1588524033.0",
@@ -65,15 +66,17 @@ var _ = Describe("EventParser", func() {
 			msg, reply, err := subject.ParseAppMention(eventRaw, event)
 			Expect(err).ToNot(HaveOccurred())
 			Expect(reply).To(BeTrue())
-			Expect(msg.TeamID).To(Equal(teamID))
-			Expect(msg.OriginUserID).To(Equal(realUserID))
-			Expect(msg.Origin).To(Equal(localChannelID))
-			Expect(msg.OriginTimestamp).To(Equal("1588524033.0"))
-			Expect(msg.OriginThreadTimestamp).To(Equal("1588524033.1"))
-			Expect(msg.OriginType).To(Equal(message.ChannelOriginType))
-			Expect(msg.InterruptTarget).To(Equal(localChannelID))
-			Expect(msg.Timestamp.Format(time.RFC3339)).To(Equal("2020-05-03T16:40:33Z"))
-			Expect(msg.Text).To(Equal(fmt.Sprintf("hi <@%s> i haz questions", realUserID)))
+			Expect(msg.ChannelTeamID).To(Equal(teamID))
+			Expect(msg.ChannelID).To(Equal(localChannelID))
+			Expect(msg.UserTeamID).To(Equal(teamID))
+			Expect(msg.UserID).To(Equal(realUserID))
+			Expect(msg.TargetChannelTeamID).To(Equal(teamID))
+			Expect(msg.TargetChannelID).To(Equal(localChannelID))
+			Expect(msg.RawTimestamp).To(Equal("1588524033.0"))
+			Expect(msg.RawThreadTimestamp).To(Equal("1588524033.1"))
+			Expect(msg.RawText).To(Equal(fmt.Sprintf("hi <@%s> i haz questions", realUserID)))
+			Expect(msg.Type).To(Equal(message.ChannelMessageType))
+			Expect(msg.Time.Format(time.RFC3339)).To(Equal("2020-05-03T16:40:33Z"))
 		})
 
 		It("ignores messages from self", func() {
@@ -90,8 +93,8 @@ var _ = Describe("EventParser", func() {
 			msg, reply, err := subject.ParseAppMention(eventRaw, event)
 			Expect(err).ToNot(HaveOccurred())
 			Expect(reply).To(BeTrue())
-			Expect(msg.Origin).To(Equal(localChannelID))
-			Expect(msg.InterruptTarget).To(Equal(remoteChannelID))
+			Expect(msg.ChannelID).To(Equal(localChannelID))
+			Expect(msg.TargetChannelID).To(Equal(remoteChannelID))
 		})
 
 		PIt("parses attachment fallback", func() {
@@ -118,6 +121,7 @@ var _ = Describe("EventParser", func() {
 		BeforeEach(func() {
 			event = slackevents.MessageEvent{
 				User:            realUserID,
+				UserTeam:        teamID,
 				Channel:         directID,
 				Text:            fmt.Sprintf("hi <#%s> <@%s> i haz questions", remoteChannelID, botUserID),
 				TimeStamp:       "1588524033.0",
@@ -178,15 +182,17 @@ var _ = Describe("EventParser", func() {
 				msg, reply, err := subject.ParseMessage(eventRaw, event)
 				Expect(err).ToNot(HaveOccurred())
 				Expect(reply).To(BeTrue())
-				Expect(msg.TeamID).To(Equal(teamID))
-				Expect(msg.OriginUserID).To(Equal(realUserID))
-				Expect(msg.Origin).To(Equal(directID))
-				Expect(msg.OriginTimestamp).To(Equal("1588524033.0"))
-				Expect(msg.OriginThreadTimestamp).To(Equal("1588524033.1"))
-				Expect(msg.OriginType).To(Equal(message.ChannelOriginType))
-				Expect(msg.InterruptTarget).To(Equal(remoteChannelID))
-				Expect(msg.Timestamp.Format(time.RFC3339)).To(Equal("2020-05-03T16:40:33Z"))
-				Expect(msg.Text).To(Equal(fmt.Sprintf("hi <#%s> <@%s> i haz questions", remoteChannelID, botUserID)))
+				Expect(msg.ChannelTeamID).To(Equal(teamID))
+				Expect(msg.ChannelID).To(Equal(directID))
+				Expect(msg.UserTeamID).To(Equal(teamID))
+				Expect(msg.UserID).To(Equal(realUserID))
+				Expect(msg.TargetChannelTeamID).To(Equal(teamID))
+				Expect(msg.TargetChannelID).To(Equal(remoteChannelID))
+				Expect(msg.RawTimestamp).To(Equal("1588524033.0"))
+				Expect(msg.RawThreadTimestamp).To(Equal("1588524033.1"))
+				Expect(msg.RawText).To(Equal(fmt.Sprintf("hi <#%s> <@%s> i haz questions", remoteChannelID, botUserID)))
+				Expect(msg.Type).To(Equal(message.ChannelMessageType))
+				Expect(msg.Time.Format(time.RFC3339)).To(Equal("2020-05-03T16:40:33Z"))
 			})
 
 			It("captures contextual channels", func() {
@@ -195,8 +201,8 @@ var _ = Describe("EventParser", func() {
 				msg, reply, err := subject.ParseMessage(eventRaw, event)
 				Expect(err).ToNot(HaveOccurred())
 				Expect(reply).To(BeTrue())
-				Expect(msg.Origin).To(Equal(directID))
-				Expect(msg.InterruptTarget).To(Equal(remoteChannelID))
+				Expect(msg.ChannelID).To(Equal(directID))
+				Expect(msg.TargetChannelID).To(Equal(remoteChannelID))
 			})
 		})
 
@@ -210,15 +216,17 @@ var _ = Describe("EventParser", func() {
 				msg, reply, err := subject.ParseMessage(eventRaw, event)
 				Expect(err).ToNot(HaveOccurred())
 				Expect(reply).To(BeTrue())
-				Expect(msg.TeamID).To(Equal(teamID))
-				Expect(msg.OriginUserID).To(Equal(realUserID))
-				Expect(msg.Origin).To(Equal(directID))
-				Expect(msg.OriginTimestamp).To(Equal("1588524033.0"))
-				Expect(msg.OriginThreadTimestamp).To(Equal("1588524033.1"))
-				Expect(msg.OriginType).To(Equal(message.DirectMessageOriginType))
-				Expect(msg.InterruptTarget).To(Equal(remoteChannelID))
-				Expect(msg.Timestamp.Format(time.RFC3339)).To(Equal("2020-05-03T16:40:33Z"))
-				Expect(msg.Text).To(Equal(fmt.Sprintf("tell me about <#%s> please", remoteChannelID)))
+				Expect(msg.ChannelTeamID).To(Equal(teamID))
+				Expect(msg.ChannelID).To(Equal(directID))
+				Expect(msg.UserTeamID).To(Equal(teamID))
+				Expect(msg.UserID).To(Equal(realUserID))
+				Expect(msg.TargetChannelTeamID).To(Equal(teamID))
+				Expect(msg.TargetChannelID).To(Equal(remoteChannelID))
+				Expect(msg.RawTimestamp).To(Equal("1588524033.0"))
+				Expect(msg.RawThreadTimestamp).To(Equal("1588524033.1"))
+				Expect(msg.RawText).To(Equal(fmt.Sprintf("tell me about <#%s> please", remoteChannelID)))
+				Expect(msg.Type).To(Equal(message.DirectMessageMessageType))
+				Expect(msg.Time.Format(time.RFC3339)).To(Equal("2020-05-03T16:40:33Z"))
 			})
 
 			It("ignores messages without a channel", func() {

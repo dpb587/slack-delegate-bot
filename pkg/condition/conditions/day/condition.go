@@ -15,7 +15,7 @@ type Condition struct {
 var _ condition.Condition = &Condition{}
 
 func (c Condition) Evaluate(m message.Message) (bool, error) {
-	actual := m.Timestamp.In(c.Location).Format("Mon")
+	actual := m.Time.In(c.Location).Format("Mon")
 
 	for _, expected := range c.Days {
 		if expected == actual {

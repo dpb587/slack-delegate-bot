@@ -14,12 +14,12 @@ var _ = Describe("Condition", func() {
 
 	BeforeEach(func() {
 		subject = Condition{Channel: "C12345678"}
-		msg = message.Message{InterruptTarget: "C12345678"}
+		msg = message.Message{TargetChannelID: "C12345678"}
 	})
 
 	Context("non-matching target", func() {
 		BeforeEach(func() {
-			msg = message.Message{InterruptTarget: "C98765432"}
+			msg = message.Message{TargetChannelID: "C98765432"}
 		})
 
 		It("fails", func() {

@@ -40,7 +40,7 @@ func (m *Responder) ProcessMessage(msg message.Message) error {
 	if len(response.Delegates) > 0 {
 		responseText = delegates.Join(response.Delegates, " ")
 
-		if msg.OriginType == message.ChannelOriginType {
+		if msg.Type == message.ChannelMessageType {
 			responseText = fmt.Sprintf("^ %s", responseText)
 		}
 	} else if response.EmptyMessage != "" {
@@ -53,15 +53,15 @@ func (m *Responder) ProcessMessage(msg message.Message) error {
 		slack.MsgOptionText(responseText, false),
 	}
 
-	if v := msg.OriginThreadTimestamp; v != "" {
+	if v := msg.RawThreadTimestamp; v != "" {
 		// always stay in thread if one is started
 		opts = append(opts, slack.MsgOptionTS(v))
-	} else if msg.OriginType == message.ChannelOriginType {
+	} else if msg.Type == message.ChannelMessageType {
 		// always use a thread if in a channel
-		opts = append(opts, slack.MsgOptionTS(msg.OriginTimestamp))
+		opts = append(opts, slack.MsgOptionTS(msg.RawTimestamp))
 	}
 
-	_, _, err = m.api.PostMessage(msg.Origin, opts...)
+	_, _, err = m.api.PostMessage(msg.ChannelID, opts...)
 	if err != nil {
 		return errors.Wrap(err, "posting message")
 	}

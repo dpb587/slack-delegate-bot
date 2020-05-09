@@ -25,7 +25,7 @@ func (h *Handler) Execute(msg *message.Message) (message.MessageResponse, error)
 	var config model.ChannelConfig
 
 	err := h.db.Model(config).
-		Where("team_id = ? AND channel_id = ?", msg.TeamID, msg.InterruptTarget).
+		Where("team_id = ? AND channel_id = ?", msg.TargetChannelTeamID, msg.TargetChannelID).
 		Where("revision_latest = ?", true).
 		First(&config).
 		Error
@@ -44,7 +44,7 @@ func (h *Handler) executeTeam(msg *message.Message) (message.MessageResponse, er
 	var config model.TeamConfig
 
 	err := h.db.Model(config).
-		Where("team_id = ?", msg.TeamID).
+		Where("team_id = ?", msg.TargetChannelTeamID).
 		Where("revision_latest = ?", true).
 		First(&config).
 		Error

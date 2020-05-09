@@ -4,22 +4,28 @@ import (
 	"time"
 )
 
-type OriginType string
+type MessageType string
 
-// TODO rename to MentionOriginType
-const ChannelOriginType OriginType = "channel"
-const DirectMessageOriginType OriginType = "dm"
+// TODO rename to MentionMessageType
+const ChannelMessageType MessageType = "channel"
+const DirectMessageMessageType MessageType = "dm"
 
 type Message struct {
 	ServiceAPI interface{}
 
-	TeamID                string
-	OriginUserID          string
-	OriginType            OriginType
-	Origin                string
-	OriginTimestamp       string
-	OriginThreadTimestamp string
-	InterruptTarget       string
-	Timestamp             time.Time
-	Text                  string
+	UserTeamID string
+	UserID     string
+
+	ChannelTeamID string
+	ChannelID     string
+
+	TargetChannelTeamID string
+	TargetChannelID     string
+
+	RawText            string
+	RawTimestamp       string
+	RawThreadTimestamp string
+
+	Time time.Time
+	Type MessageType
 }

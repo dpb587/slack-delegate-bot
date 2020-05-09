@@ -43,15 +43,17 @@ func (h ShowHandler) Handle(cmd slack.SlashCommand) (bool, error) {
 
 	now := time.Now()
 	msg := message.Message{
-		ServiceAPI:      h.serviceAPI,
-		TeamID:          cmd.TeamID,
-		OriginUserID:    cmd.UserID,
-		OriginType:      message.DirectMessageOriginType,
-		Origin:          cmd.ChannelID,
-		OriginTimestamp: fmt.Sprintf("%d.0", now.UTC()),
-		InterruptTarget: cmd.ChannelID,
-		Timestamp:       now,
-		Text:            "slash-command",
+		ServiceAPI:          h.serviceAPI,
+		ChannelTeamID:       cmd.TeamID,
+		ChannelID:           cmd.ChannelID,
+		UserTeamID:          cmd.TeamID,
+		UserID:              cmd.UserID,
+		RawTimestamp:        fmt.Sprintf("%d.0", now.UTC().Unix()),
+		TargetChannelTeamID: cmd.TeamID,
+		TargetChannelID:     cmd.ChannelID,
+		RawText:             "slash-command",
+		Type:                message.DirectMessageMessageType,
+		Time:                now,
 	}
 
 	response, err := h.handler.Execute(&msg)

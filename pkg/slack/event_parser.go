@@ -24,15 +24,17 @@ func (m *EventParser) ParseAppMention(raw slackevents.EventsAPIEvent, e slackeve
 	}
 
 	msg := message.Message{
-		TeamID:                raw.TeamID,
-		OriginUserID:          e.User,
-		Origin:                e.Channel,
-		OriginTimestamp:       e.TimeStamp,
-		OriginThreadTimestamp: e.ThreadTimeStamp,
-		OriginType:            message.ChannelOriginType,
-		InterruptTarget:       e.Channel,
-		Timestamp:             slackutil.MustConvertTimestamp(e.TimeStamp),
-		Text:                  e.Text,
+		ChannelTeamID:       raw.TeamID,
+		ChannelID:           e.Channel,
+		UserID:              e.User,
+		UserTeamID:          e.UserTeam,
+		RawTimestamp:        e.TimeStamp,
+		RawThreadTimestamp:  e.ThreadTimeStamp,
+		RawText:             e.Text,
+		TargetChannelTeamID: raw.TeamID,
+		TargetChannelID:     e.Channel,
+		Type:                message.ChannelMessageType,
+		Time:                slackutil.MustConvertTimestamp(e.TimeStamp),
 	}
 
 	// TODO attachments?
@@ -50,24 +52,26 @@ func (m *EventParser) ParseMessage(raw slackevents.EventsAPIEvent, e slackevents
 	}
 
 	msg := message.Message{
-		TeamID:                raw.TeamID,
-		OriginUserID:          e.User,
-		Origin:                e.Channel,
-		OriginTimestamp:       e.TimeStamp,
-		OriginThreadTimestamp: e.ThreadTimeStamp,
-		OriginType:            message.ChannelOriginType,
-		InterruptTarget:       e.Channel,
-		Timestamp:             slackutil.MustConvertTimestamp(e.TimeStamp),
-		Text:                  e.Text,
+		ChannelTeamID:       raw.TeamID,
+		ChannelID:           e.Channel,
+		UserID:              e.User,
+		UserTeamID:          e.UserTeam,
+		TargetChannelTeamID: raw.TeamID,
+		TargetChannelID:     e.Channel,
+		RawTimestamp:        e.TimeStamp,
+		RawThreadTimestamp:  e.ThreadTimeStamp,
+		RawText:             e.Text,
+		Type:                message.ChannelMessageType,
+		Time:                slackutil.MustConvertTimestamp(e.TimeStamp),
 	}
 
 	if e.ChannelType == "im" {
-		msg.OriginType = message.DirectMessageOriginType
+		msg.Type = message.DirectMessageMessageType
 
 		// assume they mention a channel for the interrupt
 		msg = ParseMessageForAnyChannelReference(msg)
 
-		if msg.InterruptTarget == msg.Origin {
+		if msg.TargetChannelTeamID == msg.ChannelTeamID && msg.TargetChannelID == msg.ChannelID {
 			// but if no channel mentioned in the dm, ignore them
 			// TODO give a help link; move to responder?
 			return message.Message{}, false, nil
@@ -80,7 +84,7 @@ func (m *EventParser) ParseMessage(raw slackevents.EventsAPIEvent, e slackevents
 		// check for contextual channel
 		msg = ParseMessageForChannelReference(msg, isSelf)
 
-		if msg.InterruptTarget == msg.Origin {
+		if msg.TargetChannelTeamID == msg.ChannelTeamID && msg.TargetChannelID == msg.ChannelID {
 			// cannot detect channel from assumed-mpim/non-channel messages
 			// TODO give a help link; move to responder?
 			return message.Message{}, false, nil

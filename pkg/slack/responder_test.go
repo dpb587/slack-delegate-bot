@@ -27,9 +27,9 @@ var _ = Describe("MessageHandler", func() {
 		subject = NewResponder(slackAPI, interruptHandler)
 
 		msg = message.Message{
-			Origin:          "C1234567",
-			OriginType:      message.ChannelOriginType,
-			OriginTimestamp: "fake-timestamp",
+			ChannelID:    "C1234567",
+			RawTimestamp: "fake-timestamp",
+			Type:         message.ChannelMessageType,
 		}
 	})
 
@@ -58,8 +58,8 @@ var _ = Describe("MessageHandler", func() {
 			})
 
 			It("responds to direct messages", func() {
-				msg.Origin = "D1234567"
-				msg.OriginType = message.DirectMessageOriginType
+				msg.ChannelID = "D1234567"
+				msg.Type = message.DirectMessageMessageType
 
 				err := subject.ProcessMessage(msg)
 				Expect(err).NotTo(HaveOccurred())
@@ -95,7 +95,7 @@ var _ = Describe("MessageHandler", func() {
 			})
 
 			It("responds to existing threads", func() {
-				msg.OriginThreadTimestamp = "fake-earlier-timestamp"
+				msg.RawThreadTimestamp = "fake-earlier-timestamp"
 
 				err := subject.ProcessMessage(msg)
 				Expect(err).NotTo(HaveOccurred())

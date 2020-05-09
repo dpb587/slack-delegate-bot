@@ -31,14 +31,14 @@ var _ = Describe("Condition", func() {
 
 	Context("non-matching day", func() {
 		It("fails", func() {
-			b, err := subject.Evaluate(message.Message{Timestamp: mustParseRFC3339("2006-01-03T12:04:05+07:00")})
+			b, err := subject.Evaluate(message.Message{Time: mustParseRFC3339("2006-01-03T12:04:05+07:00")})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(b).To(BeFalse())
 		})
 	})
 
 	It("succeeds", func() {
-		b, err := subject.Evaluate(message.Message{Timestamp: mustParseRFC3339("2006-01-03T03:04:05+07:00")})
+		b, err := subject.Evaluate(message.Message{Time: mustParseRFC3339("2006-01-03T03:04:05+07:00")})
 		Expect(err).NotTo(HaveOccurred())
 		Expect(b).To(BeTrue())
 	})
