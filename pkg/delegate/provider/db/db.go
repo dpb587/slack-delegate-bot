@@ -3,7 +3,7 @@ package db
 import (
 	"fmt"
 
-	"github.com/dpb587/slack-delegate-bot/pkg/handler/db/model"
+	"github.com/dpb587/slack-delegate-bot/pkg/delegate/provider/db/model"
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
 )

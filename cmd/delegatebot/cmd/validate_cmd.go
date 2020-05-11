@@ -9,7 +9,7 @@ type ValidateCmd struct {
 }
 
 func (c *ValidateCmd) Execute(_ []string) error {
-	_, err := c.Root.GetHandler()
+	_, err := c.Root.GetDelegator()
 
 	return err
 }

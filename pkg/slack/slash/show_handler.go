@@ -5,25 +5,24 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
 	"time"
 
-	"github.com/dpb587/slack-delegate-bot/pkg/handler"
+	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
 	"github.com/dpb587/slack-delegate-bot/pkg/message"
 	"github.com/pkg/errors"
 	"github.com/slack-go/slack"
 )
 
 type ShowHandler struct {
-	handler    handler.Handler
+	delegator  delegate.Delegator
 	serviceAPI interface{}
 }
 
 var _ Handler = HelpHandler{}
 
-func NewShowHandler(h handler.Handler, serviceAPI interface{}) Handler {
+func NewShowHandler(h delegate.Delegator, serviceAPI interface{}) Handler {
 	return &ShowHandler{
-		handler:    h,
+		delegator:  h,
 		serviceAPI: serviceAPI,
 	}
 }
@@ -56,26 +55,21 @@ func (h ShowHandler) Handle(cmd slack.SlashCommand) (bool, error) {
 		Time:                now,
 	}
 
-	response, err := h.handler.Execute(msg)
+	dd, err := h.delegator.Delegate(msg)
 	if err != nil {
-		return false, errors.Wrap(err, "evaluating a response")
+		return false, errors.Wrap(err, "finding delegates")
 	}
 
 	var responseMessage string
 
-	if len(response.Delegates) > 0 {
+	if len(dd) == 0 {
+		responseMessage = "Looks like there is no interrupt available for this channel."
+	} else {
 		responseMessage = "Here are the current interrupt details for this channel:"
 
-		for _, d := range response.Delegates {
+		for _, d := range dd {
 			responseMessage = fmt.Sprintf("%s\n- %s", responseMessage, d)
 		}
-	} else if response.EmptyMessage != "" {
-		responseMessage = fmt.Sprintf(
-			"Looks like there is not an interrupt available for this channel:\n> %s",
-			strings.ReplaceAll(response.EmptyMessage, "\n", "\n> "),
-		)
-	} else {
-		responseMessage = "Looks like there is no interrupt available for this channel."
 	}
 
 	bodyBuf, err := json.Marshal(map[string]string{

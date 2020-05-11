@@ -3,8 +3,8 @@ package yaml
 import (
 	"github.com/dpb587/slack-delegate-bot/pkg/condition/conditions"
 	"github.com/dpb587/slack-delegate-bot/pkg/configutil"
+	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates"
-	"github.com/dpb587/slack-delegate-bot/pkg/handler"
 	"github.com/pkg/errors"
 	yaml "gopkg.in/yaml.v2"
 )
@@ -21,8 +21,8 @@ func NewParser(delegatorsFactory delegates.Factory, conditionsFactory conditions
 	}
 }
 
-func (l Parser) Parse(buf []byte) (handler.Handler, error) {
-	h := Handler{}
+func (l Parser) Parse(buf []byte) (delegate.Delegator, error) {
+	h := Delegator{}
 
 	var parsed Schema
 

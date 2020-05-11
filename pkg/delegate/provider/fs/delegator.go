@@ -5,13 +5,14 @@ import (
 	"path/filepath"
 	"sort"
 
-	"github.com/dpb587/slack-delegate-bot/pkg/handler"
-	"github.com/dpb587/slack-delegate-bot/pkg/handler/yaml"
+	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
+	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/coalesce"
+	"github.com/dpb587/slack-delegate-bot/pkg/delegate/provider/yaml"
 	"github.com/pkg/errors"
 )
 
-func BuildHandler(parser *yaml.Parser, paths ...string) (handler.Handler, error) {
-	var handlers []handler.Handler
+func BuildDelegator(parser *yaml.Parser, paths ...string) (delegate.Delegator, error) {
+	var delegators []delegate.Delegator
 
 	paths, err := squashPaths(paths)
 	if err != nil {
@@ -29,14 +30,14 @@ func BuildHandler(parser *yaml.Parser, paths ...string) (handler.Handler, error)
 			return nil, errors.Wrapf(err, "parsing %s", path)
 		}
 
-		handlers = append(handlers, h)
+		delegators = append(delegators, h)
 	}
 
-	if len(handlers) == 1 {
-		return handlers[0], nil
+	if len(delegators) == 1 {
+		return delegators[0], nil
 	}
 
-	return handler.NewCoalesceHandler(handlers...), nil
+	return coalesce.Delegator{Delegators: delegators}, nil
 }
 
 func squashPaths(paths []string) ([]string, error) {

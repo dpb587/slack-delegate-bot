@@ -56,7 +56,7 @@ func (c *APICmd) slackService() zlhttp.Service {
 
 	api := slackapi.New(c.SlackToken, apiOpts...)
 
-	h, err := c.GetHandler()
+	h, err := c.GetDelegator()
 	if err != nil {
 		// TODO
 		panic(err)

@@ -36,7 +36,7 @@ func (c *SimulateCmd) Execute(_ []string) error {
 		c.Args.Message = "<@U0000000>"
 	}
 
-	handler, err := c.Root.GetHandler()
+	delegator, err := c.Root.GetDelegator()
 	if err != nil {
 		return err
 	}
@@ -53,22 +53,16 @@ func (c *SimulateCmd) Execute(_ []string) error {
 		Type:                message.DirectMessageMessageType,
 	}
 
-	response, err := handler.Execute(msg)
+	dd, err := delegator.Delegate(msg)
 	if err != nil {
 		return errors.Wrap(err, "evaluating a response")
 	}
 
-	var reply string
-
-	if len(response.Delegates) > 0 {
-		reply = delegates.Join(response.Delegates, " ")
-	} else if response.EmptyMessage != "" {
-		reply = response.EmptyMessage
+	if len(dd) == 0 {
+		return nil
 	}
 
-	if reply != "" {
-		fmt.Printf("%s\n", reply)
-	}
+	fmt.Printf("%s\n", delegates.Join(dd, " "))
 
 	return nil
 }

@@ -3,8 +3,8 @@ package slack
 import (
 	"fmt"
 
+	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates"
-	"github.com/dpb587/slack-delegate-bot/pkg/handler"
 	"github.com/dpb587/slack-delegate-bot/pkg/message"
 	"github.com/pkg/errors"
 	"github.com/slack-go/slack"
@@ -16,37 +16,33 @@ type ResponderSlackAPI interface {
 }
 
 type Responder struct {
-	api     ResponderSlackAPI
-	handler handler.Handler
+	api       ResponderSlackAPI
+	delegator delegate.Delegator
 }
 
-func NewResponder(api ResponderSlackAPI, handler handler.Handler) *Responder {
+func NewResponder(api ResponderSlackAPI, delegator delegate.Delegator) *Responder {
 	return &Responder{
-		api:     api,
-		handler: handler,
+		api:       api,
+		delegator: delegator,
 	}
 }
 
 func (m *Responder) ProcessMessage(msg message.Message) error {
 	msg.ServiceAPI = m.api
 
-	response, err := m.handler.Execute(msg)
+	dd, err := m.delegator.Delegate(msg)
 	if err != nil {
 		return errors.Wrap(err, "finding delegate")
 	}
 
-	var responseText string
-
-	if len(response.Delegates) > 0 {
-		responseText = delegates.Join(response.Delegates, " ")
-
-		if msg.Type == message.ChannelMessageType {
-			responseText = fmt.Sprintf("^ %s", responseText)
-		}
-	} else if response.EmptyMessage != "" {
-		responseText = response.EmptyMessage
-	} else {
+	if len(dd) == 0 {
 		return nil
+	}
+
+	responseText := delegates.Join(dd, " ")
+
+	if msg.Type == message.ChannelMessageType {
+		responseText = fmt.Sprintf("^ %s", responseText)
 	}
 
 	opts := []slack.MsgOption{

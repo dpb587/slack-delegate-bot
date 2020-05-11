@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
-	"github.com/dpb587/slack-delegate-bot/pkg/handler/handlerfakes"
+	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegatefakes"
 	"github.com/dpb587/slack-delegate-bot/pkg/message"
 	. "github.com/dpb587/slack-delegate-bot/pkg/slack"
 	"github.com/dpb587/slack-delegate-bot/pkg/slack/slackfakes"
@@ -17,14 +17,14 @@ import (
 var _ = Describe("MessageHandler", func() {
 	var subject *Responder
 	var msg message.Message
-	var interruptHandler *handlerfakes.FakeHandler
+	var delegator *delegatefakes.FakeDelegator
 	var slackAPI *slackfakes.FakeResponderSlackAPI
 
 	BeforeEach(func() {
 		slackAPI = &slackfakes.FakeResponderSlackAPI{}
-		interruptHandler = &handlerfakes.FakeHandler{}
+		delegator = &delegatefakes.FakeDelegator{}
 
-		subject = NewResponder(slackAPI, interruptHandler)
+		subject = NewResponder(slackAPI, delegator)
 
 		msg = message.Message{
 			ChannelID:    "C1234567",
@@ -35,7 +35,7 @@ var _ = Describe("MessageHandler", func() {
 
 	Context("delegate handling", func() {
 		It("propagates errors", func() {
-			interruptHandler.ExecuteReturns(message.MessageResponse{}, errors.New("fake-err1"))
+			delegator.DelegateReturns(nil, errors.New("fake-err1"))
 
 			err := subject.ProcessMessage(msg)
 			Expect(err).To(HaveOccurred())
@@ -45,13 +45,11 @@ var _ = Describe("MessageHandler", func() {
 
 		Context("delegates provided", func() {
 			BeforeEach(func() {
-				interruptHandler.ExecuteReturns(
-					message.MessageResponse{
-						Delegates: []message.Delegate{
-							delegate.Literal{Text: "something"},
-							delegate.Literal{Text: "completely"},
-							delegate.Literal{Text: "different"},
-						},
+				delegator.DelegateReturns(
+					[]message.Delegate{
+						delegate.Literal{Text: "something"},
+						delegate.Literal{Text: "completely"},
+						delegate.Literal{Text: "different"},
 					},
 					nil,
 				)
@@ -117,31 +115,6 @@ var _ = Describe("MessageHandler", func() {
 		})
 
 		Context("no delegates", func() {
-			Context("custom empty messages", func() {
-				It("uses it", func() {
-					interruptHandler.ExecuteReturns(
-						message.MessageResponse{
-							EmptyMessage: "go find your own answer",
-						},
-						nil,
-					)
-
-					err := subject.ProcessMessage(msg)
-					Expect(err).NotTo(HaveOccurred())
-					Expect(slackAPI.PostMessageCallCount()).To(Equal(1))
-
-					channel, opts := slackAPI.PostMessageArgsForCall(0)
-					endpoint, values, err := slack.UnsafeApplyMsgOptions("fake-token", channel, "fake-url/", opts...)
-					Expect(err).ToNot(HaveOccurred())
-					Expect(endpoint).To(Equal("fake-url/chat.postMessage"))
-					Expect(values.Get("channel")).To(Equal("C1234567"))
-					Expect(values.Get("text")).To(Equal("go find your own answer"))
-
-					// Expect(res).ToNot(BeNil())
-					// Expect(res.Text).To(Equal("go find your own answer"))
-				})
-			})
-
 			It("stays quiet", func() {
 				err := subject.ProcessMessage(msg)
 				Expect(err).NotTo(HaveOccurred())
