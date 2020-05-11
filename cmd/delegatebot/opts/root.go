@@ -22,7 +22,7 @@ import (
 )
 
 type Root struct {
-	Configs []string `long:"config" description:"Path to configuration files"`
+	Configs []string `long:"config" description:"Path to configuration files" env:"CONFIG"`
 	handler handler.Handler
 
 	LogLevel args.LogLevel `long:"log-level" description:"Show additional levels of log messages" env:"LOG_LEVEL" default:"INFO"`
@@ -69,7 +69,7 @@ func (r *Root) GetHandler() (handler.Handler, error) {
 		}
 
 		switch uriSplit[0] {
-		case "mysql2", "postgres", "sqlite3":
+		case "mysql", "sqlite3":
 			dbh, err := db.OpenDB(uriSplit[0], uriSplit[1])
 			if err != nil {
 				return nil, errors.Wrapf(err, "opening db")
