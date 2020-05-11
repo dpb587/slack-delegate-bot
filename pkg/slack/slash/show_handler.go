@@ -43,6 +43,7 @@ func (h ShowHandler) Handle(cmd slack.SlashCommand) (bool, error) {
 	now := time.Now()
 	msg := message.Message{
 		ServiceAPI:          h.serviceAPI,
+		Delegator:           h.delegator,
 		ChannelTeamID:       cmd.TeamID,
 		ChannelID:           cmd.ChannelID,
 		UserTeamID:          cmd.TeamID,

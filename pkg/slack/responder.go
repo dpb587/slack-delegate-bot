@@ -29,6 +29,7 @@ func NewResponder(api ResponderSlackAPI, delegator delegate.Delegator) *Responde
 
 func (m *Responder) ProcessMessage(msg message.Message) error {
 	msg.ServiceAPI = m.api
+	msg.Delegator = m.delegator
 
 	dd, err := m.delegator.Delegate(msg)
 	if err != nil {
