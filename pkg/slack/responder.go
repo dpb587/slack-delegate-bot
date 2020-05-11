@@ -30,7 +30,7 @@ func NewResponder(api ResponderSlackAPI, handler handler.Handler) *Responder {
 func (m *Responder) ProcessMessage(msg message.Message) error {
 	msg.ServiceAPI = m.api
 
-	response, err := m.handler.Execute(&msg)
+	response, err := m.handler.Execute(msg)
 	if err != nil {
 		return errors.Wrap(err, "finding delegate")
 	}

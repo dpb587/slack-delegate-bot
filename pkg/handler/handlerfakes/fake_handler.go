@@ -9,10 +9,10 @@ import (
 )
 
 type FakeHandler struct {
-	ExecuteStub        func(*message.Message) (message.MessageResponse, error)
+	ExecuteStub        func(message.Message) (message.MessageResponse, error)
 	executeMutex       sync.RWMutex
 	executeArgsForCall []struct {
-		arg1 *message.Message
+		arg1 message.Message
 	}
 	executeReturns struct {
 		result1 message.MessageResponse
@@ -26,11 +26,11 @@ type FakeHandler struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeHandler) Execute(arg1 *message.Message) (message.MessageResponse, error) {
+func (fake *FakeHandler) Execute(arg1 message.Message) (message.MessageResponse, error) {
 	fake.executeMutex.Lock()
 	ret, specificReturn := fake.executeReturnsOnCall[len(fake.executeArgsForCall)]
 	fake.executeArgsForCall = append(fake.executeArgsForCall, struct {
-		arg1 *message.Message
+		arg1 message.Message
 	}{arg1})
 	fake.recordInvocation("Execute", []interface{}{arg1})
 	fake.executeMutex.Unlock()
@@ -50,13 +50,13 @@ func (fake *FakeHandler) ExecuteCallCount() int {
 	return len(fake.executeArgsForCall)
 }
 
-func (fake *FakeHandler) ExecuteCalls(stub func(*message.Message) (message.MessageResponse, error)) {
+func (fake *FakeHandler) ExecuteCalls(stub func(message.Message) (message.MessageResponse, error)) {
 	fake.executeMutex.Lock()
 	defer fake.executeMutex.Unlock()
 	fake.ExecuteStub = stub
 }
 
-func (fake *FakeHandler) ExecuteArgsForCall(i int) *message.Message {
+func (fake *FakeHandler) ExecuteArgsForCall(i int) message.Message {
 	fake.executeMutex.RLock()
 	defer fake.executeMutex.RUnlock()
 	argsForCall := fake.executeArgsForCall[i]

@@ -17,7 +17,7 @@ func NewCoalesceHandler(handlers ...Handler) Handler {
 	}
 }
 
-func (ch *CoalesceHandler) Execute(msg *message.Message) (message.MessageResponse, error) {
+func (ch *CoalesceHandler) Execute(msg message.Message) (message.MessageResponse, error) {
 	for hIdx, h := range ch.handlers {
 		res, err := h.Execute(msg)
 		if err != nil {

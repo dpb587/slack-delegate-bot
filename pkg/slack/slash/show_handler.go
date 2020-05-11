@@ -56,7 +56,7 @@ func (h ShowHandler) Handle(cmd slack.SlashCommand) (bool, error) {
 		Time:                now,
 	}
 
-	response, err := h.handler.Execute(&msg)
+	response, err := h.handler.Execute(msg)
 	if err != nil {
 		return false, errors.Wrap(err, "evaluating a response")
 	}

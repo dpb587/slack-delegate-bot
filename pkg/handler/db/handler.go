@@ -21,7 +21,7 @@ func NewHandler(db *gorm.DB, parser *yaml.Parser) handler.Handler {
 	}
 }
 
-func (h *Handler) Execute(msg *message.Message) (message.MessageResponse, error) {
+func (h *Handler) Execute(msg message.Message) (message.MessageResponse, error) {
 	var config model.ChannelConfig
 
 	err := h.db.Model(config).
@@ -40,7 +40,7 @@ func (h *Handler) Execute(msg *message.Message) (message.MessageResponse, error)
 	return h.executeWithConfig(msg, config.Config)
 }
 
-func (h *Handler) executeTeam(msg *message.Message) (message.MessageResponse, error) {
+func (h *Handler) executeTeam(msg message.Message) (message.MessageResponse, error) {
 	var config model.TeamConfig
 
 	err := h.db.Model(config).
@@ -59,7 +59,7 @@ func (h *Handler) executeTeam(msg *message.Message) (message.MessageResponse, er
 	return h.executeWithConfig(msg, config.DefaultConfig)
 }
 
-func (h *Handler) executeWithConfig(msg *message.Message, config string) (message.MessageResponse, error) {
+func (h *Handler) executeWithConfig(msg message.Message, config string) (message.MessageResponse, error) {
 	configHandler, err := h.parser.Parse([]byte(config))
 	if err != nil {
 		return message.MessageResponse{}, errors.Wrap(err, "parsing config")

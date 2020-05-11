@@ -53,7 +53,7 @@ func (c *SimulateCmd) Execute(_ []string) error {
 		Type:                message.DirectMessageMessageType,
 	}
 
-	response, err := handler.Execute(&msg)
+	response, err := handler.Execute(msg)
 	if err != nil {
 		return errors.Wrap(err, "evaluating a response")
 	}

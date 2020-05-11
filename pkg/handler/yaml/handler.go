@@ -16,9 +16,9 @@ type Handler struct {
 
 var _ handler.Handler = &Handler{}
 
-func (h Handler) Execute(m *message.Message) (message.MessageResponse, error) {
+func (h Handler) Execute(m message.Message) (message.MessageResponse, error) {
 	if h.condition != nil {
-		tf, err := h.condition.Evaluate(*m)
+		tf, err := h.condition.Evaluate(m)
 		if err != nil {
 			return message.MessageResponse{}, errors.Wrap(err, "evaluating condition")
 		} else if !tf {
@@ -28,7 +28,7 @@ func (h Handler) Execute(m *message.Message) (message.MessageResponse, error) {
 
 	response := message.MessageResponse{}
 
-	interrupts, err := h.delegator.Delegate(*m)
+	interrupts, err := h.delegator.Delegate(m)
 	if err != nil {
 		return response, err
 	}
