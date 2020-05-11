@@ -11,7 +11,10 @@ const ChannelMessageType MessageType = "channel"
 const DirectMessageMessageType MessageType = "dm"
 
 type Message struct {
-	ServiceAPI interface{}
+	// TODO these in separate context?
+	ServiceAPI     interface{}
+	Delegator      interface{}
+	RecursionDepth int
 
 	UserTeamID string
 	UserID     string
