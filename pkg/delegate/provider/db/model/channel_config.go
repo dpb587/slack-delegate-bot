@@ -8,17 +8,18 @@ import (
 )
 
 type ChannelConfig struct {
-	ID             uuid.UUID `gorm:"primary"`
-	TeamID         string    `gorm:"unique:revision"` // TODO unique_index not working on sqlite
-	ChannelID      string    `gorm:"unique:revision"`
-	RevisionNum    int       `gorm:"unique:revision"`
+	ID             uuid.UUID `gorm:"primary_key"`
+	TeamID         string    `gorm:"unique_index:channel_config_revision"`
+	ChannelID      string    `gorm:"unique_index:channel_config_revision"`
+	RevisionNum    int       `gorm:"unique_index:channel_config_revision"`
 	RevisionLatest bool
 
 	UpdatedAt     time.Time
 	UpdatedByID   string
 	UpdatedByName string
 
-	Config string
+	Config        string
+	ConfigSecrets string
 }
 
 func (m *ChannelConfig) BeforeCreate(scope *gorm.Scope) error {

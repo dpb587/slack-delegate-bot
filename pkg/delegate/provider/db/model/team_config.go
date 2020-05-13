@@ -8,17 +8,18 @@ import (
 )
 
 type TeamConfig struct {
-	ID             uuid.UUID `gorm:"primary"`
-	TeamID         string    `gorm:"unique:revision"` // TODO unique_index not working on sqlite
-	RevisionNum    int       `gorm:"unique:revision"`
+	ID             uuid.UUID `gorm:"primary_key"`
+	TeamID         string    `gorm:"unique_index:team_config_revision"`
+	RevisionNum    int       `gorm:"unique_index:team_config_revision"`
 	RevisionLatest bool
 
 	UpdatedAt     time.Time
 	UpdatedByID   string
 	UpdatedByName string
 
-	HelpText      string
-	DefaultConfig string
+	HelpText             string
+	DefaultConfig        string
+	DefaultConfigSecrets string
 }
 
 func (m *TeamConfig) BeforeCreate(scope *gorm.Scope) error {
