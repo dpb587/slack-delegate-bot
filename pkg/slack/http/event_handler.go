@@ -13,17 +13,20 @@ import (
 	"github.com/pkg/errors"
 	"github.com/slack-go/slack"
 	"github.com/slack-go/slack/slackevents"
+	"go.uber.org/zap"
 )
 
 type EventHandler struct {
 	processor     ourslack.Processor
 	signingSecret string
+	logger        *zap.Logger
 }
 
-func NewEventHandler(processor ourslack.Processor, signingSecret string) *EventHandler {
+func NewEventHandler(processor ourslack.Processor, signingSecret string, logger *zap.Logger) *EventHandler {
 	return &EventHandler{
 		processor:     processor,
 		signingSecret: signingSecret,
+		logger:        logger,
 	}
 }
 
@@ -44,12 +47,14 @@ func (h EventHandler) Accept(c echo.Context) error {
 		return errors.Wrap(err, "reading body")
 	}
 
-	fmt.Printf("%s\n", body) // TODO remove/debug
-
 	if err = verifier.Ensure(); err != nil {
-		// TODO log err
+		h.logger.Debug("received unverified slack event", zap.ByteString("payload", body))
+		h.logger.Warn("unable to verify incoming slack event", zap.Error(err))
+
 		return c.String(http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
 	}
+
+	h.logger.Debug("received slack event", zap.ByteString("payload", body))
 
 	event, err := slackevents.ParseEvent(json.RawMessage(body), slackevents.OptionNoVerifyToken())
 	if err != nil {
@@ -75,7 +80,7 @@ func (h EventHandler) Accept(c echo.Context) error {
 		return c.NoContent(http.StatusAccepted)
 	}
 
-	// TODO warn to add handling of or unsubscribe from event
+	h.logger.Warn(fmt.Sprintf("unexpected slack event type: %s", event.Type))
 
 	return c.NoContent(http.StatusOK)
 }

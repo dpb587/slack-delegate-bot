@@ -2,10 +2,8 @@ package opts
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
-	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/args"
 	conditionsfactory "github.com/dpb587/slack-delegate-bot/pkg/condition/conditions/defaultfactory"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/delegates/coalesce"
@@ -14,11 +12,11 @@ import (
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/provider/fs"
 	"github.com/dpb587/slack-delegate-bot/pkg/delegate/provider/yaml"
 	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 
 	// include potential database adapters
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
@@ -26,18 +24,23 @@ type Root struct {
 	Configs   []string `long:"config" description:"Path to configuration files" env:"CONFIG"`
 	delegator delegate.Delegator
 
-	LogLevel args.LogLevel `long:"log-level" description:"Show additional levels of log messages" env:"LOG_LEVEL" default:"INFO"`
-	logger   logrus.FieldLogger
+	LogLevel zapcore.Level `long:"log-level" description:"Show additional levels of log messages" env:"LOG_LEVEL" default:"INFO"`
+	logger   *zap.Logger
 
 	parser *yaml.Parser
 }
 
-func (r *Root) GetLogger() logrus.FieldLogger {
+func (r *Root) GetLogger() *zap.Logger {
 	if r.logger == nil {
-		var logger = logrus.New()
-		logger.Out = os.Stderr
-		logger.Formatter = &logrus.JSONFormatter{}
-		logger.Level = logrus.Level(r.LogLevel)
+		cfg := zap.NewProductionConfig()
+		cfg.Level.SetLevel(r.LogLevel)
+		cfg.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+		cfg.OutputPaths = []string{"stdout"}
+
+		logger, err := cfg.Build()
+		if err != nil {
+			panic(err)
+		}
 
 		r.logger = logger
 	}

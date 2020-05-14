@@ -2,7 +2,6 @@ package http
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -12,17 +11,20 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 	"github.com/slack-go/slack"
+	"go.uber.org/zap"
 )
 
 type SlashHandler struct {
 	processor     slash.Processor
 	signingSecret string
+	logger        *zap.Logger
 }
 
-func NewSlashHandler(processor slash.Processor, signingSecret string) *SlashHandler {
+func NewSlashHandler(processor slash.Processor, signingSecret string, logger *zap.Logger) *SlashHandler {
 	return &SlashHandler{
 		processor:     processor,
 		signingSecret: signingSecret,
+		logger:        logger,
 	}
 }
 
@@ -39,12 +41,14 @@ func (h SlashHandler) Accept(c echo.Context) error {
 		return errors.Wrap(err, "reading body")
 	}
 
-	fmt.Printf("%s\n", body) // TODO log.DEBUG
-
 	if err = verifier.Ensure(); err != nil {
-		// TODO log err
+		h.logger.Debug("received unverified slack slash command", zap.ByteString("payload", body))
+		h.logger.Warn("unable to verify incoming slack slash command", zap.Error(err))
+
 		return c.String(http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
 	}
+
+	h.logger.Debug("received slack slash event", zap.ByteString("payload", body))
 
 	// TODO reconsider+refactor
 	req := c.Request()

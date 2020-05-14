@@ -11,8 +11,9 @@ import (
 	slackhttp "github.com/dpb587/slack-delegate-bot/pkg/slack/http"
 	"github.com/dpb587/slack-delegate-bot/pkg/slack/slash"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/sirupsen/logrus"
 	slackapi "github.com/slack-go/slack"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 type APICmd struct {
@@ -33,7 +34,7 @@ func (c *APICmd) Execute(_ []string) error {
 		WriteTimeout: 30 * time.Second,
 	}
 
-	s := zlhttp.NewServer(http)
+	s := zlhttp.NewServer(http, c.GetLogger())
 
 	services := []zlhttp.Service{
 		zlhttp.MetaRuntimeHandler{},
@@ -46,11 +47,13 @@ func (c *APICmd) Execute(_ []string) error {
 func (c *APICmd) slackService() zlhttp.Service {
 	var apiOpts []slackapi.Option
 
-	if logrus.Level(c.Root.LogLevel) == logrus.DebugLevel {
+	if c.Root.LogLevel == zapcore.DebugLevel {
+		ll, _ := zap.NewStdLogAt(c.Root.GetLogger(), zapcore.DebugLevel)
+
 		apiOpts = append(
 			apiOpts,
 			slackapi.OptionDebug(true),
-			// slackapi.OptionLog(c.Root.GetLogger()),
+			slackapi.OptionLog(ll),
 		)
 	}
 
