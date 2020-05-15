@@ -22,14 +22,29 @@ func NewParser(delegatorsFactory delegates.Factory, conditionsFactory conditions
 }
 
 func (l Parser) Parse(buf []byte) (delegate.Delegator, error) {
-	h := Delegator{}
-
 	var parsed Schema
 
-	err := yaml.Unmarshal(buf, &parsed.DelegateBot) // TODO remove `delegatebot` wrapper?
+	err := yaml.Unmarshal(buf, &parsed.DelegateBot)
 	if err != nil {
 		return nil, errors.Wrap(err, "unmarshalling")
 	}
+
+	return l.parse(parsed)
+}
+
+func (l Parser) ParseFull(buf []byte) (delegate.Delegator, error) {
+	var parsed Schema
+
+	err := yaml.Unmarshal(buf, &parsed)
+	if err != nil {
+		return nil, errors.Wrap(err, "unmarshalling")
+	}
+
+	return l.parse(parsed)
+}
+
+func (l Parser) parse(parsed Schema) (delegate.Delegator, error) {
+	h := Delegator{}
 
 	if parsed.DelegateBot.Watch != nil {
 		watch, err := l.conditionsFactory.Create("or", parsed.DelegateBot.Watch)

@@ -25,7 +25,7 @@ func BuildDelegator(parser *yaml.Parser, paths ...string) (delegate.Delegator, e
 			return nil, errors.Wrapf(err, "reading %s", path)
 		}
 
-		h, err := parser.Parse(pathBytes)
+		h, err := parser.ParseFull(pathBytes)
 		if err != nil {
 			return nil, errors.Wrapf(err, "parsing %s", path)
 		}
