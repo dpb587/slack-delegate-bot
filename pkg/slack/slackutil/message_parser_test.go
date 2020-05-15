@@ -1,4 +1,4 @@
-package slack_test
+package slackutil_test
 
 import (
 	. "github.com/onsi/ginkgo"
@@ -6,7 +6,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/dpb587/slack-delegate-bot/pkg/message"
-	. "github.com/dpb587/slack-delegate-bot/pkg/slack"
+	. "github.com/dpb587/slack-delegate-bot/pkg/slack/slackutil"
 )
 
 var _ = Describe("MentionParser", func() {

@@ -2,14 +2,14 @@ package http
 
 import (
 	"github.com/dpb587/slack-delegate-bot/pkg/http"
-	"github.com/dpb587/slack-delegate-bot/pkg/slack"
+	"github.com/dpb587/slack-delegate-bot/pkg/slack/event"
 	"github.com/dpb587/slack-delegate-bot/pkg/slack/slash"
 	"github.com/labstack/echo/v4"
 	"go.uber.org/zap"
 )
 
 type Service struct {
-	EventProcessor slack.Processor
+	EventProcessor event.Processor
 	SlashProcessor slash.Processor
 	SigningSecret  string
 	Logger         *zap.Logger

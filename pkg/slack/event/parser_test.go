@@ -1,4 +1,4 @@
-package slack_test
+package event_test
 
 import (
 	"fmt"
@@ -10,11 +10,12 @@ import (
 	"github.com/slack-go/slack/slackevents"
 
 	"github.com/dpb587/slack-delegate-bot/pkg/message"
-	. "github.com/dpb587/slack-delegate-bot/pkg/slack"
+	ourslack "github.com/dpb587/slack-delegate-bot/pkg/slack"
+	. "github.com/dpb587/slack-delegate-bot/pkg/slack/event"
 	"github.com/dpb587/slack-delegate-bot/pkg/slack/slackfakes"
 )
 
-var _ = Describe("EventParser", func() {
+var _ = Describe("Parser", func() {
 	const appID = "A1234567"
 	const teamID = "T1234567"
 	const botUserID = "U1234567"
@@ -23,7 +24,7 @@ var _ = Describe("EventParser", func() {
 	const localChannelID = "C1234567"
 	const remoteChannelID = "C9876543"
 
-	var subject *EventParser
+	var subject *Parser
 	var fakeUserLookupSlackAPI *slackfakes.FakeUserLookupSlackAPI
 	var eventRaw slackevents.EventsAPIEvent
 
@@ -41,7 +42,7 @@ var _ = Describe("EventParser", func() {
 			return &slack.User{}, nil
 		}
 
-		subject = NewEventParser(NewUserLookup(fakeUserLookupSlackAPI))
+		subject = NewParser(ourslack.NewUserLookup(fakeUserLookupSlackAPI))
 		eventRaw = slackevents.EventsAPIEvent{
 			APIAppID: appID,
 			TeamID:   teamID,

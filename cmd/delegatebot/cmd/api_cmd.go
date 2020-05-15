@@ -8,6 +8,7 @@ import (
 	"github.com/dpb587/slack-delegate-bot/cmd/delegatebot/opts"
 	zlhttp "github.com/dpb587/slack-delegate-bot/pkg/http"
 	"github.com/dpb587/slack-delegate-bot/pkg/slack"
+	slackevent "github.com/dpb587/slack-delegate-bot/pkg/slack/event"
 	slackhttp "github.com/dpb587/slack-delegate-bot/pkg/slack/http"
 	"github.com/dpb587/slack-delegate-bot/pkg/slack/slash"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -65,8 +66,8 @@ func (c *APICmd) slackService() zlhttp.Service {
 		panic(err)
 	}
 
-	processor := slack.NewSyncProcessor(
-		slack.NewEventParser(slack.NewUserLookup(api)),
+	processor := slackevent.NewSyncProcessor(
+		slackevent.NewParser(slack.NewUserLookup(api)),
 		slack.NewResponder(api, h),
 	)
 

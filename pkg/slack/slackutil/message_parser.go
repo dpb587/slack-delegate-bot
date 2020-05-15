@@ -1,4 +1,4 @@
-package slack
+package slackutil
 
 import (
 	"regexp"

@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	ourslack "github.com/dpb587/slack-delegate-bot/pkg/slack"
+	"github.com/dpb587/slack-delegate-bot/pkg/slack/event"
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 	"github.com/slack-go/slack"
@@ -17,12 +17,12 @@ import (
 )
 
 type EventHandler struct {
-	processor     ourslack.Processor
+	processor     event.Processor
 	signingSecret string
 	logger        *zap.Logger
 }
 
-func NewEventHandler(processor ourslack.Processor, signingSecret string, logger *zap.Logger) *EventHandler {
+func NewEventHandler(processor event.Processor, signingSecret string, logger *zap.Logger) *EventHandler {
 	return &EventHandler{
 		processor:     processor,
 		signingSecret: signingSecret,
