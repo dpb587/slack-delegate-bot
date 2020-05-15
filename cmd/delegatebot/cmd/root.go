@@ -8,4 +8,5 @@ type Root struct {
 	Validate *ValidateCmd `command:"validate" description:"For validating configuration"`
 	Simulate *SimulateCmd `command:"simulate" description:"For simulating an incoming message"`
 	API      *APICmd      `command:"api" description:"Run HTTP API server"`
+	RTM      *RTMCmd      `command:"rtm" description:"Run RTM client"`
 }
