@@ -86,5 +86,6 @@ func (c *APICmd) slackService() zlhttp.Service {
 		EventProcessor: processor,
 		SlashProcessor: slashProcessor,
 		SigningSecret:  c.SlackSigningSecret,
+		Logger:         c.GetLogger(),
 	}
 }
