@@ -7,8 +7,8 @@ import (
 )
 
 var reMention = regexp.MustCompile(`<@([^>]+)>`)
-var reChannel = regexp.MustCompile(`<#([^|>]+)(\|([^>]+))?>`)
-var reChannelMention = regexp.MustCompile(`<#([^|>]+)(\|([^>]+))?>\s+<@([^>]+)>`)
+var reChannel = regexp.MustCompile(`<#([^|>]+)(\|([^>]*))?>`)
+var reChannelMention = regexp.MustCompile(`<#([^|>]+)(\|([^>]*))?>\s+<@([^>]+)>`)
 
 func ParseMessageForAnyChannelReference(msg message.Message) message.Message {
 	match := reChannel.FindStringSubmatch(msg.RawText)
